@@ -53,10 +53,10 @@ export default function CalendarioPage() {
 
       {/* Quick Actions */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-6 hover:bg-black/30 transition-all duration-300 group">
+        <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 backdrop-blur-sm border border-green-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 group hover:shadow-lg hover:shadow-green-500/20">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <svg className="w-6 h-6 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
@@ -70,44 +70,44 @@ export default function CalendarioPage() {
           </p>
         </div>
 
-        <div className="bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-6 hover:bg-black/30 transition-all duration-300 group">
+        <div className="bg-gradient-to-br from-amber-500/10 to-yellow-600/10 backdrop-blur-sm border border-amber-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 group hover:shadow-lg hover:shadow-amber-500/20">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <svg className="w-6 h-6 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
               <h3 className="font-subheading text-white text-lg font-semibold">Estados</h3>
-              <p className="text-green-300/80 text-sm">Gestiona el estado de tus eventos</p>
+              <p className="text-amber-300/80 text-sm">Gestiona el estado de tus eventos</p>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs font-mono border border-green-500/30">
+            <span className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 text-emerald-300 px-3 py-1 rounded-full text-xs font-mono border border-emerald-400/30">
               Confirmada
             </span>
-            <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-xs font-mono border border-yellow-500/30">
+            <span className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 px-3 py-1 rounded-full text-xs font-mono border border-amber-400/30">
               Pendiente
             </span>
-            <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-xs font-mono border border-red-500/30">
+            <span className="bg-gradient-to-r from-red-500/20 to-rose-500/20 text-red-300 px-3 py-1 rounded-full text-xs font-mono border border-red-400/30">
               Cancelada
             </span>
           </div>
         </div>
 
-        <div className="bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-6 hover:bg-black/30 transition-all duration-300 group">
+        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-sm border border-blue-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 group hover:shadow-lg hover:shadow-blue-500/20">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <svg className="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
               <h3 className="font-subheading text-white text-lg font-semibold">Información</h3>
-              <p className="text-green-300/80 text-sm">Detalles de cada evento</p>
+              <p className="text-blue-300/80 text-sm">Detalles de cada evento</p>
             </div>
           </div>
-          <p className="text-green-300/60 text-sm font-mono">
+          <p className="text-blue-300/60 text-sm font-mono">
             Cada evento puede incluir artista, ubicación, hora y notas adicionales
           </p>
         </div>

@@ -54,17 +54,17 @@ const SpinnerIcon = () => (
 
 // Función para obtener el color del estado
 function getEstadoColor(estado: string) {
-  const colors = {
-    'Propuesta': 'bg-blue-100 text-blue-800 border-blue-200',
-    'Negociacion': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    'Contratada': 'bg-green-100 text-green-800 border-green-200',
-    'PendienteAnticipo': 'bg-orange-100 text-orange-800 border-orange-200',
-    'Confirmada': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    'Ejecutada': 'bg-purple-100 text-purple-800 border-purple-200',
-    'Cerrada': 'bg-gray-100 text-gray-800 border-gray-200',
-    'Cancelada': 'bg-red-100 text-red-800 border-red-200',
+  switch (estado) {
+    case 'Propuesta': return 'bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-blue-400/30 text-blue-300 shadow-sm'
+    case 'Negociacion': return 'bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border-amber-400/30 text-amber-300 shadow-sm'
+    case 'Contratada': return 'bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-400/30 text-green-300 shadow-sm'
+    case 'PendienteAnticipo': return 'bg-gradient-to-r from-orange-500/10 to-orange-600/10 border-orange-400/30 text-orange-300 shadow-sm'
+    case 'Confirmada': return 'bg-gradient-to-r from-emerald-500/10 to-green-500/10 border-emerald-400/30 text-emerald-300 shadow-sm'
+    case 'Ejecutada': return 'bg-gradient-to-r from-purple-500/10 to-violet-500/10 border-purple-400/30 text-purple-300 shadow-sm'
+    case 'Cerrada': return 'bg-gradient-to-r from-slate-500/10 to-gray-500/10 border-slate-400/30 text-slate-300 shadow-sm'
+    case 'Cancelada': return 'bg-gradient-to-r from-red-500/10 to-rose-500/10 border-red-400/30 text-red-300 shadow-sm'
+    default: return 'bg-gradient-to-r from-zinc-500/10 to-gray-500/10 border-zinc-400/30 text-zinc-300 shadow-sm'
   }
-  return colors[estado as keyof typeof colors] || 'bg-gray-100 text-gray-800 border-gray-200'
 }
 
 export default function FechasTable({ initialData, basePath = '/fechas' }: { initialData: FechaRow[]; basePath?: string }) {

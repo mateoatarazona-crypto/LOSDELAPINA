@@ -1,7 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import EmpresariosTable from './table'
-import SearchBar from '@/components/SearchBar'
-import FilterPanel from '@/components/FilterPanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -57,65 +55,34 @@ export default async function EmpresariosPage() {
           </div>
         </div>
         
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2">
-              <SearchBar 
-                placeholder="Buscar empresarios por nombre, empresa, país..."
-                className="w-full"
-              />
-            </div>
-            <div>
-              <FilterPanel 
-                filterGroups={[
-                  {
-                    title: "País",
-                    key: "pais",
-                    type: "checkbox",
-                    options: Array.from(new Set(rows.map(r => r.pais).filter(Boolean)))
-                       .filter((pais): pais is string => pais !== null)
-                       .map(pais => ({
-                         label: pais,
-                         value: pais,
-                         count: rows.filter(e => e.pais === pais).length
-                       }))
-                  },
-                  {
-                    title: "Ciudad",
-                    key: "ciudad",
-                    type: "checkbox",
-                    options: Array.from(new Set(rows.map(r => r.ciudad).filter(Boolean)))
-                       .filter((ciudad): ciudad is string => ciudad !== null)
-                       .map(ciudad => ({
-                         label: ciudad,
-                         value: ciudad,
-                         count: rows.filter(e => e.ciudad === ciudad).length
-                       }))
-                  }
-                ]}
-                onFiltersChange={() => {}}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Con Fechas Activas</div>
+          <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+            <div className="text-emerald-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">📅</span>
+              Con Fechas Activas
+            </div>
             <div className="text-white text-xl font-display">{rows.filter(r => r.fechasCount > 0).length}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Países</div>
+          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-sm border border-blue-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+            <div className="text-blue-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">🌍</span>
+              Países
+            </div>
             <div className="text-white text-xl font-display">{paisesUnicos}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Ciudades</div>
+          <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-sm border border-purple-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+            <div className="text-purple-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">🏙️</span>
+              Ciudades
+            </div>
             <div className="text-white text-xl font-display">{ciudadesUnicas}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Con Email</div>
+          <div className="bg-gradient-to-br from-orange-500/10 to-red-600/10 backdrop-blur-sm border border-orange-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20">
+            <div className="text-orange-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">📧</span>
+              Con Email
+            </div>
             <div className="text-white text-xl font-display">{rows.filter(r => r.email).length}</div>
           </div>
         </div>

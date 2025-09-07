@@ -1,7 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import ArtistasTable from './table'
-import SearchBar, { useSearch } from '@/components/SearchBar'
-import FilterPanel, { useFilters } from '@/components/FilterPanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,49 +46,29 @@ export default async function ArtistasPage() {
           </div>
         </div>
         
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2">
-              <SearchBar 
-                placeholder="Buscar artistas por nombre, género, país..."
-                className="w-full"
-              />
-            </div>
-            <div>
-              <FilterPanel 
-                filterGroups={[
-                  {
-                    title: "Género Musical",
-                    key: "genero",
-                    type: "checkbox",
-                    options: [...new Set(rows.map(r => r.genero).filter(Boolean))]
-                       .filter((genero): genero is string => genero !== null)
-                       .map(genero => ({
-                         label: genero,
-                         value: genero,
-                         count: rows.filter(r => r.genero === genero).length
-                       }))
-                  }
-                ]}
-                onFiltersChange={() => {}}
-              />
-            </div>
-          </div>
-        </div>
+
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Con Fechas Activas</div>
+          <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+            <div className="text-emerald-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">🎤</span>
+              Con Fechas Activas
+            </div>
             <div className="text-white text-xl font-display">{rows.filter(r => r.fechasCount > 0).length}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Géneros Únicos</div>
+          <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-sm border border-purple-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+            <div className="text-purple-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">🎵</span>
+              Géneros Únicos
+            </div>
             <div className="text-white text-xl font-display">{new Set(rows.map(r => r.genero).filter(Boolean)).size}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Con Representante</div>
+          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-sm border border-blue-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+            <div className="text-blue-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">👥</span>
+              Con Representante
+            </div>
             <div className="text-white text-xl font-display">{rows.filter(r => r.representante).length}</div>
           </div>
         </div>

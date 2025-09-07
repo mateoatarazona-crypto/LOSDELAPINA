@@ -75,7 +75,7 @@ export default async function FechasPage({ searchParams }: { searchParams: Promi
     <div className="space-y-8 animate-fade-in-up">
       {/* Header Section */}
       <div className="bg-gradient-to-br from-green-900/30 to-black/50 backdrop-blur-sm border border-green-700/20 rounded-2xl p-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="font-display text-4xl text-gradient-green text-shadow-glow mb-2">📅 Próximas Fechas</h1>
             <p className="font-body text-lg text-green-200/80">Gestiona tu calendario de eventos y presentaciones</p>
@@ -86,22 +86,57 @@ export default async function FechasPage({ searchParams }: { searchParams: Promi
           </div>
         </div>
         
+        {/* Botón Gigante Agregar Fecha Nueva */}
+        <div className="mb-6">
+          <a 
+            href="/fechas/nueva" 
+            className="group relative block w-full bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 hover:from-green-500 hover:via-green-400 hover:to-emerald-400 text-white rounded-2xl p-8 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/25 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative flex items-center justify-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <div className="text-center">
+                <h2 className="font-display text-3xl font-bold mb-2 group-hover:text-green-100 transition-colors">Agregar Fecha Nueva</h2>
+                <p className="font-body text-green-100/80 text-lg group-hover:text-white/90 transition-colors">Programa un nuevo evento o presentación</p>
+              </div>
+            </div>
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full group-hover:scale-125 transition-transform duration-700" />
+          </a>
+        </div>
+        
         {/* Advanced Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <div className="glass rounded-xl p-4 hover-lift pulse-glow">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Ingresos Totales</div>
+          <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+            <div className="text-emerald-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">💰</span>
+              Ingresos Totales
+            </div>
             <div className="text-white text-xl font-display">${Intl.NumberFormat('es-CO').format(totalIngresos)}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Anticipos</div>
+          <div className="bg-gradient-to-br from-amber-500/10 to-yellow-600/10 backdrop-blur-sm border border-amber-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20">
+            <div className="text-amber-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">⏳</span>
+              Anticipos
+            </div>
             <div className="text-white text-xl font-display">${Intl.NumberFormat('es-CO').format(totalAnticipos)}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Confirmadas</div>
+          <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 backdrop-blur-sm border border-green-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20">
+            <div className="text-green-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">✅</span>
+              Confirmadas
+            </div>
             <div className="text-white text-xl font-display">{fechasConfirmadas}</div>
           </div>
-          <div className="glass rounded-xl p-4 hover-lift">
-            <div className="text-green-400 text-sm font-subheading uppercase tracking-wider mb-1">Pendientes</div>
+          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-sm border border-blue-400/20 rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+            <div className="text-blue-300 text-sm font-subheading uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="text-lg">⏰</span>
+              Pendientes
+            </div>
             <div className="text-white text-xl font-display">{fechasPendientes}</div>
           </div>
         </div>

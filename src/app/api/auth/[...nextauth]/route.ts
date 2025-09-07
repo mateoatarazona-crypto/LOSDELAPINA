@@ -46,6 +46,10 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt'
   },
+
+  pages: {
+    signIn: '/login'
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -58,10 +62,19 @@ const handler = NextAuth({
         session.user.id = token.id as string;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Redirigir al dashboard después del login exitoso
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      // Si es una URL relativa, permitirla
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      // Por defecto, redirigir al dashboard
+      return `${baseUrl}/dashboard`;
     }
-  },
-  pages: {
-    signIn: '/login'
   }
 });
 

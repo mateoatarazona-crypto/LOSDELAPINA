@@ -21,14 +21,14 @@ export default function LoginPage() {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false,
+        callbackUrl: '/dashboard',
+        redirect: true,
       });
 
       if (result?.error) {
         setError('Credenciales inválidas');
-      } else {
-        router.push('/dashboard');
       }
+      // NextAuth manejará la redirección automáticamente
     } catch (error) {
       setError('Error al iniciar sesión');
     } finally {
