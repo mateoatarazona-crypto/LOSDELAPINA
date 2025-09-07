@@ -21,9 +21,9 @@ interface ExpenseManagerProps {
 
 const EXPENSE_CATEGORIES = {
   transporte: { label: 'Transporte', icon: '🚗', color: 'text-blue-400' },
-  hospedaje: { label: 'Hospedaje', icon: '🏨', color: 'text-purple-400' },
+  hospedaje: { label: 'Hospedaje', icon: '🏨', color: 'text-cyan-400' },
   comida: { label: 'Comida', icon: '🍽️', color: 'text-orange-400' },
-  equipos: { label: 'Equipos', icon: '🎵', color: 'text-green-400' },
+  equipos: { label: 'Equipos', icon: '🎵', color: 'text-cyan-400' },
   personal: { label: 'Personal', icon: '👥', color: 'text-yellow-400' },
   otros: { label: 'Otros', icon: '📋', color: 'text-gray-400' }
 }
@@ -101,24 +101,24 @@ export default function ExpenseManager({
   const budgetPercentage = budget > 0 ? (totalExpenses / budget) * 100 : 0
 
   return (
-    <div className={`bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-6 ${className}`}>
+    <div className={`bg-black/20 backdrop-blur-sm border border-cyan-700/30 rounded-xl p-6 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+          <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
             </svg>
           </div>
           <div>
             <h3 className="font-subheading text-white text-lg font-semibold">Gestión de Gastos</h3>
-            <p className="text-green-300/80 text-sm font-mono">Controla tu presupuesto</p>
+            <p className="text-cyan-300/80 text-sm font-mono">Controla tu presupuesto</p>
           </div>
         </div>
         
         <button
           onClick={() => setIsAddingExpense(true)}
-          className="bg-green-500/20 hover:bg-green-500/30 text-green-400 px-4 py-2 rounded-lg transition-all duration-200 font-subheading text-sm border border-green-500/30 hover:border-green-500/50"
+          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 px-4 py-2 rounded-lg transition-all duration-200 font-subheading text-sm border border-cyan-500/30 hover:border-cyan-500/50"
         >
           + Agregar Gasto
         </button>
@@ -126,9 +126,9 @@ export default function ExpenseManager({
 
       {/* Budget Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-green-900/20 rounded-lg p-4">
+        <div className="bg-cyan-900/20 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-green-300 text-sm font-mono">Presupuesto</span>
+            <span className="text-cyan-300 text-sm font-mono">Presupuesto</span>
             <button 
               onClick={() => {
                 const newBudget = prompt('Nuevo presupuesto:', budget.toString())
@@ -136,7 +136,7 @@ export default function ExpenseManager({
                   setBudget(parseFloat(newBudget))
                 }
               }}
-              className="text-green-400 hover:text-green-300 text-xs"
+              className="text-cyan-400 hover:text-cyan-300 text-xs"
             >
               ✏️
             </button>
@@ -149,8 +149,8 @@ export default function ExpenseManager({
           <p className="text-white text-xl font-bold">${totalExpenses.toLocaleString()}</p>
         </div>
         
-        <div className={`rounded-lg p-4 ${remainingBudget >= 0 ? 'bg-green-900/20' : 'bg-red-900/30'}`}>
-          <span className={`text-sm font-mono ${remainingBudget >= 0 ? 'text-green-300' : 'text-red-300'}`}>Restante</span>
+        <div className={`rounded-lg p-4 ${remainingBudget >= 0 ? 'bg-cyan-900/20' : 'bg-red-900/30'}`}>
+          <span className={`text-sm font-mono ${remainingBudget >= 0 ? 'text-cyan-300' : 'text-red-300'}`}>Restante</span>
           <p className={`text-xl font-bold ${remainingBudget >= 0 ? 'text-white' : 'text-red-400'}`}>
             ${remainingBudget.toLocaleString()}
           </p>
@@ -160,15 +160,15 @@ export default function ExpenseManager({
       {/* Budget Progress Bar */}
       <div className="mb-6">
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-green-300 font-mono">Progreso del Presupuesto</span>
-          <span className={`font-mono ${budgetPercentage > 100 ? 'text-red-400' : 'text-green-400'}`}>
+          <span className="text-cyan-300 font-mono">Progreso del Presupuesto</span>
+        <span className={`font-mono ${budgetPercentage > 100 ? 'text-red-400' : 'text-cyan-400'}`}>
             {budgetPercentage.toFixed(1)}%
           </span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div 
             className={`h-2 rounded-full transition-all duration-300 ${
-              budgetPercentage > 100 ? 'bg-red-500' : budgetPercentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
+              budgetPercentage > 100 ? 'bg-red-500' : budgetPercentage > 80 ? 'bg-yellow-500' : 'bg-cyan-500'
             }`}
             style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
           />
@@ -177,39 +177,39 @@ export default function ExpenseManager({
 
       {/* Add Expense Form */}
       {isAddingExpense && (
-        <div className="bg-green-900/10 border border-green-700/30 rounded-lg p-4 mb-6">
+        <div className="bg-cyan-900/10 border border-cyan-700/30 rounded-lg p-4 mb-6">
           <h4 className="font-subheading text-white text-sm font-semibold mb-4">Nuevo Gasto</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-green-300 text-xs font-mono mb-2">Descripción</label>
+              <label className="block text-cyan-300 text-xs font-mono mb-2">Descripción</label>
               <input
                 type="text"
                 value={newExpense.description}
                 onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Ej: Gasolina para el viaje"
-                className="w-full bg-black/30 border border-green-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                className="w-full bg-black/30 border border-cyan-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
               />
             </div>
             
             <div>
-              <label className="block text-green-300 text-xs font-mono mb-2">Monto</label>
+              <label className="block text-cyan-300 text-xs font-mono mb-2">Monto</label>
               <input
                 type="number"
                 value={newExpense.amount}
                 onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
                 placeholder="0.00"
-                className="w-full bg-black/30 border border-green-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                className="w-full bg-black/30 border border-cyan-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
               />
             </div>
           </div>
           
           <div className="mb-4">
-            <label className="block text-green-300 text-xs font-mono mb-2">Categoría</label>
+            <label className="block text-cyan-300 text-xs font-mono mb-2">Categoría</label>
             <select
               value={newExpense.category}
               onChange={(e) => setNewExpense(prev => ({ ...prev, category: e.target.value as keyof typeof EXPENSE_CATEGORIES }))}
-              className="w-full bg-black/30 border border-green-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
+              className="w-full bg-black/30 border border-cyan-700/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             >
               {Object.entries(EXPENSE_CATEGORIES).map(([key, cat]) => (
                 <option key={key} value={key}>{cat.icon} {cat.label}</option>
@@ -220,7 +220,7 @@ export default function ExpenseManager({
           <div className="flex gap-2">
             <button
               onClick={handleAddExpense}
-              className="bg-green-500/20 hover:bg-green-500/30 text-green-400 px-4 py-2 rounded-lg transition-all duration-200 font-subheading text-sm border border-green-500/30"
+              className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 px-4 py-2 rounded-lg transition-all duration-200 font-subheading text-sm border border-cyan-500/30"
             >
               Agregar
             </button>
@@ -238,13 +238,13 @@ export default function ExpenseManager({
       <div className="space-y-3">
         <h4 className="font-subheading text-white text-sm font-semibold flex items-center gap-2">
           Gastos Registrados
-          <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs font-mono">
+          <span className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs font-mono">
             {expenses.length}
           </span>
         </h4>
         
         {expenses.length === 0 ? (
-          <div className="text-center py-8 text-green-300/60">
+          <div className="text-center py-8 text-cyan-300/60">
             <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
@@ -255,7 +255,7 @@ export default function ExpenseManager({
             {expenses.map((expense) => {
               const category = EXPENSE_CATEGORIES[expense.category]
               return (
-                <div key={expense.id} className="bg-black/20 border border-green-700/20 rounded-lg p-3 hover:bg-black/30 transition-colors duration-200">
+                <div key={expense.id} className="bg-black/20 border border-cyan-700/20 rounded-lg p-3 hover:bg-black/30 transition-colors duration-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-lg">{category.icon}</span>

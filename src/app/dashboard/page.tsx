@@ -79,17 +79,17 @@ export default function Dashboard() {
     );
   }
   return (
-    <div className="min-h-screen bg-white p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
+      <div className="max-w-7xl mx-auto p-6">
         {/* Header con información del usuario */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">Bienvenido, {session.user?.name || session.user?.email}</p>
+            <h1 className="font-display text-3xl" style={{ color: 'var(--foreground)' }}>Dashboard</h1>
+            <p className="font-caption mt-1">Bienvenido, {session.user?.name || session.user?.email}</p>
           </div>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="btn-secondary flex items-center gap-2"
           >
             <LogOut className="h-4 w-4" />
             Cerrar Sesión
@@ -98,13 +98,13 @@ export default function Dashboard() {
         <div className="space-y-8 animate-fade-in-up">
       {/* KPIs Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi title="Fechas este mes" value={kpis.eventosDelMes} icon="📅" />
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi title="Ingresos negociados" value={kpis.ingresos} money icon="💰" />
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi
             title="Anticipos pendientes"
             value={`$${Intl.NumberFormat('es-CO').format(
@@ -113,7 +113,7 @@ export default function Dashboard() {
             icon="⏳"
           />
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi
             title="Segundos pagos pendientes"
             value={`$${Intl.NumberFormat('es-CO').format(
@@ -122,17 +122,17 @@ export default function Dashboard() {
             icon="💳"
           />
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi title="Gastos totales" value={kpis.gastosTotales} money icon="📊" />
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi title="Utilidad estimada" value={kpis.utilidadEstim} money icon="📈" />
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-gradient-to-br from-green-900/20 to-black/40 backdrop-blur-md border border-green-700/30 rounded-2xl p-8">
-        <h2 className="font-heading text-2xl text-neon floating-3d mb-6 text-center">Acciones Rápidas</h2>
+      <div className="card p-8">
+        <h2 className="font-display text-2xl mb-6 text-center" style={{ color: 'var(--foreground)' }}>Acciones Rápidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <QuickActionCard
             href="/fechas"
@@ -146,7 +146,7 @@ export default function Dashboard() {
             title="Artistas"
             description="Administrar perfiles de artistas"
             icon="🎤"
-            color="from-purple-500/20 to-purple-700/20"
+            color="from-magenta-500/20 to-magenta-700/20"
           />
           <QuickActionCard
             href="/empresarios"
@@ -160,14 +160,14 @@ export default function Dashboard() {
             title="Utilidades"
             description="Analizar rentabilidad por fecha"
             icon="📈"
-            color="from-emerald-500/20 to-emerald-700/20"
+            color="from-cyan-500/20 to-cyan-700/20"
           />
           <QuickActionCard
             href="/calendario"
             title="Calendario"
             description="Planificar nuevos eventos"
             icon="📅"
-            color="from-green-500/20 to-green-700/20"
+            color="from-magenta-500/20 to-magenta-700/20"
           />
         </div>
       </div>
@@ -197,19 +197,19 @@ function Kpi({
   };
 
   return (
-    <div className="p-6 cursor-pointer">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm text-gray-600 uppercase tracking-wider font-semibold">{title}</h3>
+    <div className="card p-6 cursor-pointer">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-caption uppercase tracking-wide">{title}</h3>
         {icon && (
-          <span className="text-3xl">
+          <span className="text-2xl text-accent">
             {icon}
           </span>
         )}
       </div>
-      <p className="text-4xl text-gray-900">
+      <p className="font-display text-3xl mb-3" style={{ color: 'var(--foreground)' }}>
         {formatValue(value)}
       </p>
-      <div className="mt-3 h-1 bg-gray-300 rounded-full"></div>
+      <div className="h-1 rounded-full" style={{ background: 'var(--gradient-primary)' }}></div>
     </div>
   );
 }
@@ -229,20 +229,20 @@ function QuickActionCard({
 }) {
   return (
     <Link href={href} className="group">
-      <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer">
+      <div className="card p-6 group-hover:scale-[1.02] transition-all duration-200">
         <div className="mb-4">
-          <div className="text-4xl">
+          <div className="text-3xl text-accent">
             {icon}
           </div>
         </div>
-        <h3 className="text-xl font-bold mb-2 text-gray-900">
+        <h3 className="font-heading text-lg mb-2">
           {title}
         </h3>
-        <p className="text-gray-600 mb-4">
+        <p className="font-body text-sm mb-4">
           {description}
         </p>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500 font-semibold">
+          <span className="font-caption text-accent font-medium group-hover:translate-x-1 transition-transform duration-200">
             Ir →
           </span>
         </div>

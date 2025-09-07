@@ -63,10 +63,10 @@ function MobileMenuButton() {
     <>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="text-white hover:text-green-400 transition-all duration-200 p-2 rounded-lg hover:bg-green-500/10"
+        className="btn-secondary p-2"
         aria-label="Abrir menú"
       >
-        <svg className={`w-6 h-6 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
         </svg>
       </button>
@@ -74,31 +74,40 @@ function MobileMenuButton() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-          <div className="fixed top-0 right-0 h-full w-80 bg-black/95 backdrop-blur-xl border-l border-green-700/30 transform transition-transform duration-300 ease-out shadow-2xl">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+          <div className="fixed top-0 right-0 h-full w-80 card-elevated transform transition-transform duration-300 ease-out" style={{ background: 'var(--background)', borderLeft: '1px solid var(--border)' }}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-8">
-                <Link href="/" className="font-heading text-2xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+                <Link href="/" className="font-display text-2xl text-gradient">
                   LDPNM
                 </Link>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="text-white hover:text-green-400 transition-colors duration-200 p-2 rounded-lg hover:bg-green-500/10"
+                  className="btn-secondary p-2"
                   aria-label="Cerrar menú"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
               
-              <nav className="space-y-2">
+              <nav className="space-y-1">
                 {navigationItems.map((item) => (
                   <Link 
                     key={item.href}
                     href={item.href} 
-                    className="flex items-center gap-3 text-white hover:text-green-400 transition-all duration-200 font-subheading p-3 rounded-lg hover:bg-green-900/20 group" 
+                    className="flex items-center gap-3 font-subheading p-3 rounded-lg transition-all duration-200 group hover:scale-[1.02]" 
+                    style={{ color: 'var(--foreground-secondary)' }}
                     onClick={() => setIsOpen(false)}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--background-secondary)';
+                      e.currentTarget.style.color = 'var(--accent)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = 'var(--foreground-secondary)';
+                    }}
                   >
                     <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
@@ -108,8 +117,8 @@ function MobileMenuButton() {
                 ))}
               </nav>
               
-              <div className="mt-8 pt-6 border-t border-green-700/30">
-                <p className="text-green-300/60 text-xs font-mono text-center">
+              <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
+                <p className="font-caption text-center">
                   Sistema de Gestión Musical
                 </p>
               </div>
@@ -128,24 +137,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`} style={{ background: 'var(--background)' }}>
         <SessionProvider>
           <NotificationProvider>
-            <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+            <header className="sticky top-0 z-40 backdrop-blur-md" style={{ background: 'var(--glass-bg)', borderBottom: '1px solid var(--border)' }}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
                 <div className="flex-shrink-0">
-                  <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-300">
+                  <Link href="/" className="font-display text-2xl text-gradient hover:scale-105 transition-transform duration-200">
                     LDPNM
                   </Link>
                 </div>
                 
-                <nav className="hidden md:flex space-x-4">
+                <nav className="hidden md:flex space-x-2">
                   {navigationItems.map((item) => (
                     <Link 
                       key={item.href}
                       href={item.href} 
-                      className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-gray-50"
+                      className="flex items-center gap-2 font-subheading px-4 py-2 rounded-lg transition-all duration-200 hover:scale-[1.02]"
+                      style={{ color: 'var(--foreground-secondary)' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'var(--background-secondary)';
+                        e.currentTarget.style.color = 'var(--accent)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = 'var(--foreground-secondary)';
+                      }}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />

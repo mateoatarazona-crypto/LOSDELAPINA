@@ -114,7 +114,7 @@ export default function EmpresariosTable({ initialData }: { initialData: Empresa
             <input placeholder="Notas" className="border rounded px-2 py-1.5 text-sm" value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
           </div>
           <div className="mt-3">
-            <button disabled={saving} onClick={create} className="px-3 py-2 text-sm rounded bg-emerald-600 text-white disabled:opacity-50">Guardar</button>
+            <button disabled={saving} onClick={create} className="px-3 py-2 text-sm rounded bg-cyan-600 text-white disabled:opacity-50">Guardar</button>
           </div>
         </div>
       )}

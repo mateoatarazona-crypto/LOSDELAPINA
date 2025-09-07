@@ -57,10 +57,10 @@ function getEstadoColor(estado: string) {
   switch (estado) {
     case 'Propuesta': return 'bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-blue-400/30 text-blue-300 shadow-sm'
     case 'Negociacion': return 'bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border-amber-400/30 text-amber-300 shadow-sm'
-    case 'Contratada': return 'bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-400/30 text-green-300 shadow-sm'
+    case 'Contratada': return 'bg-gradient-to-r from-cyan-500/10 to-cyan-600/10 border-cyan-400/30 text-cyan-300 shadow-sm'
     case 'PendienteAnticipo': return 'bg-gradient-to-r from-orange-500/10 to-orange-600/10 border-orange-400/30 text-orange-300 shadow-sm'
-    case 'Confirmada': return 'bg-gradient-to-r from-emerald-500/10 to-green-500/10 border-emerald-400/30 text-emerald-300 shadow-sm'
-    case 'Ejecutada': return 'bg-gradient-to-r from-purple-500/10 to-violet-500/10 border-purple-400/30 text-purple-300 shadow-sm'
+    case 'Confirmada': return 'bg-gradient-to-r from-cyan-500/10 to-magenta-500/10 border-cyan-400/30 text-cyan-300 shadow-sm'
+    case 'Ejecutada': return 'bg-gradient-to-r from-magenta-500/10 to-violet-500/10 border-magenta-400/30 text-magenta-300 shadow-sm'
     case 'Cerrada': return 'bg-gradient-to-r from-slate-500/10 to-gray-500/10 border-slate-400/30 text-slate-300 shadow-sm'
     case 'Cancelada': return 'bg-gradient-to-r from-red-500/10 to-rose-500/10 border-red-400/30 text-red-300 shadow-sm'
     default: return 'bg-gradient-to-r from-zinc-500/10 to-gray-500/10 border-zinc-400/30 text-zinc-300 shadow-sm'
@@ -221,7 +221,7 @@ export default function FechasTable({ initialData, basePath = '/fechas' }: { ini
         </div>
         <div className="mt-3 text-xs text-zinc-600 flex items-center gap-3">
           <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 border text-zinc-700">Resultados: {data.length}</span>
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700">Total negocio: {fmtMoney(totalNegocio)}</span>
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-700">Total negocio: {fmtMoney(totalNegocio)}</span>
         </div>
       </div>
 

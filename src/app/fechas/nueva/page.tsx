@@ -148,13 +148,13 @@ export default function NuevaFechaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-green-900/20 to-black p-6">
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900/20 to-black p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button 
             onClick={() => router.back()}
-            className="text-green-400 hover:text-green-300 mb-4 flex items-center gap-2 transition-colors"
+            className="text-purple-400 hover:text-purple-300 mb-4 flex items-center gap-2 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -168,27 +168,27 @@ export default function NuevaFechaPage() {
         {/* Formulario */}
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Información Básica */}
-          <div className="bg-gradient-to-br from-green-500/10 to-black/40 backdrop-blur-sm border border-green-400/20 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-purple-500/10 to-black/40 backdrop-blur-sm border border-purple-400/20 rounded-xl p-6">
             <h2 className="font-subheading text-xl text-white mb-6">Información Básica</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-green-300 text-sm font-medium mb-2">Fecha del Evento *</label>
+                <label className="block text-purple-300 text-sm font-medium mb-2">Fecha del Evento *</label>
                 <input
                   type="datetime-local"
                   value={formData.fechaEvento}
                   onChange={(e) => handleInputChange('fechaEvento', e.target.value)}
-                  className="w-full bg-black/50 border border-green-400/30 rounded-lg px-4 py-3 text-white focus:border-green-400 focus:outline-none transition-colors"
+                  className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-green-300 text-sm font-medium mb-2">Estado</label>
+                <label className="block text-purple-300 text-sm font-medium mb-2">Estado</label>
                 <select
                   value={formData.estado}
                   onChange={(e) => handleInputChange('estado', e.target.value)}
-                  className="w-full bg-black/50 border border-green-400/30 rounded-lg px-4 py-3 text-white focus:border-green-400 focus:outline-none transition-colors"
+                  className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
                 >
                   <option value="Propuesta">Propuesta</option>
                   <option value="Negociacion">Negociación</option>
@@ -199,24 +199,24 @@ export default function NuevaFechaPage() {
               </div>
               
               <div>
-                <label className="block text-green-300 text-sm font-medium mb-2">Venue *</label>
+                <label className="block text-purple-300 text-sm font-medium mb-2">Venue *</label>
                 <input
                   type="text"
                   value={formData.venue}
                   onChange={(e) => handleInputChange('venue', e.target.value)}
-                  className="w-full bg-black/50 border border-green-400/30 rounded-lg px-4 py-3 text-white focus:border-green-400 focus:outline-none transition-colors"
+                  className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
                   placeholder="Nombre del lugar"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-green-300 text-sm font-medium mb-2">Ciudad *</label>
+                <label className="block text-purple-300 text-sm font-medium mb-2">Ciudad *</label>
                 <input
                   type="text"
                   value={formData.ciudad}
                   onChange={(e) => handleInputChange('ciudad', e.target.value)}
-                  className="w-full bg-black/50 border border-green-400/30 rounded-lg px-4 py-3 text-white focus:border-green-400 focus:outline-none transition-colors"
+                  className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
                   placeholder="Ciudad del evento"
                   required
                 />
@@ -384,7 +384,7 @@ export default function NuevaFechaPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading ? (
                 <>

@@ -36,7 +36,7 @@ export default function SearchBar({
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg 
             className={`w-5 h-5 transition-colors duration-300 ${
-              isFocused ? 'text-green-400' : 'text-green-500/60'
+              isFocused ? 'text-cyan-400' : 'text-cyan-500/60'
             }`} 
             fill="none" 
             stroke="currentColor" 
@@ -61,14 +61,14 @@ export default function SearchBar({
           className={`
             w-full pl-10 pr-4 py-3 
             bg-black/20 backdrop-blur-sm 
-            border border-green-700/30 
+            border border-cyan-700/30 
             rounded-xl 
-            text-white placeholder-green-300/60 
+            text-white placeholder-cyan-300/60 
             font-body text-sm
-            focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50
-            hover:border-green-600/50
+            focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50
+            hover:border-cyan-600/50
             transition-all duration-300
-            ${isFocused ? 'bg-black/30 shadow-lg shadow-green-500/10' : ''}
+            ${isFocused ? 'bg-black/30 shadow-lg shadow-cyan-500/10' : ''}
           `}
         />
         
@@ -79,7 +79,7 @@ export default function SearchBar({
               setQuery('')
               onSearch?.('')
             }}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-green-400 hover:text-green-300 transition-colors duration-200"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -90,8 +90,8 @@ export default function SearchBar({
       
       {/* Indicador de búsqueda activa */}
       {query && (
-        <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-green-900/20 backdrop-blur-sm border border-green-700/20 rounded-lg">
-          <div className="text-xs text-green-300/80 font-mono">
+        <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-cyan-900/20 backdrop-blur-sm border border-cyan-700/20 rounded-lg">
+          <div className="text-xs text-cyan-300/80 font-mono">
             Buscando: <span className="text-white font-semibold">"{query}"</span>
           </div>
         </div>

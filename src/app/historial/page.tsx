@@ -68,16 +68,16 @@ export default async function HistorialPage({ searchParams }: { searchParams: Pr
   const totalSegundos = rows.reduce((sum, row) => sum + row.segundoPago, 0)
   
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-6" style={{ background: 'var(--background)' }}>
       {/* Hero Section */}
-      <div className="text-center mb-12 py-16 px-6 rounded-3xl bg-gradient-to-br from-green-900/30 to-black/50 backdrop-blur-sm border border-green-700/20 relative">
-        <h1 className="font-display text-5xl md:text-6xl mb-6 text-gradient-green text-shadow-glow">
+      <div className="card p-8 text-center">
+        <h1 className="font-display text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
           📚 Historial de Eventos
         </h1>
-        <p className="font-body text-xl text-green-200/80 max-w-2xl mx-auto leading-relaxed mb-8">
+        <p className="font-caption text-lg md:text-xl max-w-2xl mx-auto mb-6" style={{ color: 'var(--foreground-secondary)' }}>
           Revisa el historial completo de eventos realizados y analiza el rendimiento de tu negocio musical
         </p>
-        <a href="/fechas/nueva" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25 flex items-center gap-2 mx-auto">
+        <a href="/fechas/nueva" className="btn-primary inline-flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -86,47 +86,47 @@ export default async function HistorialPage({ searchParams }: { searchParams: Pr
       </div>
 
       {/* Estadísticas del Historial */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-sm border border-blue-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-2xl">📊</span>
-            <h3 className="font-subheading text-blue-300 uppercase tracking-wider text-sm">Total Eventos</h3>
+            <h3 className="font-caption uppercase tracking-wider text-sm" style={{ color: 'var(--foreground-secondary)' }}>Total Eventos</h3>
           </div>
-          <p className="font-display text-3xl text-white">{rows.length}</p>
+          <p className="font-display text-3xl" style={{ color: 'var(--accent)' }}>{rows.length}</p>
         </div>
         
-        <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-2xl">💰</span>
-            <h3 className="font-subheading text-emerald-300 uppercase tracking-wider text-sm">Ingresos Totales</h3>
+            <h3 className="font-caption uppercase tracking-wider text-sm" style={{ color: 'var(--foreground-secondary)' }}>Ingresos Totales</h3>
           </div>
-          <p className="font-display text-2xl text-white">${Intl.NumberFormat('es-CO').format(totalIngresos)}</p>
+          <p className="font-display text-2xl" style={{ color: 'var(--accent)' }}>${Intl.NumberFormat('es-CO').format(totalIngresos)}</p>
         </div>
         
-        <div className="bg-gradient-to-br from-purple-500/10 to-violet-600/10 backdrop-blur-sm border border-purple-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-2xl">⏳</span>
-            <h3 className="font-subheading text-purple-300 uppercase tracking-wider text-sm">Anticipos</h3>
+            <h3 className="font-caption uppercase tracking-wider text-sm" style={{ color: 'var(--foreground-secondary)' }}>Anticipos</h3>
           </div>
-          <p className="font-display text-2xl text-white">${Intl.NumberFormat('es-CO').format(totalAnticipos)}</p>
+          <p className="font-display text-2xl" style={{ color: 'var(--accent)' }}>${Intl.NumberFormat('es-CO').format(totalAnticipos)}</p>
         </div>
         
-        <div className="bg-gradient-to-br from-orange-500/10 to-amber-600/10 backdrop-blur-sm border border-orange-400/20 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-2xl">💳</span>
-            <h3 className="font-subheading text-orange-300 uppercase tracking-wider text-sm">Segundos Pagos</h3>
+            <h3 className="font-caption uppercase tracking-wider text-sm" style={{ color: 'var(--foreground-secondary)' }}>Segundos Pagos</h3>
           </div>
-          <p className="font-display text-2xl text-white">${Intl.NumberFormat('es-CO').format(totalSegundos)}</p>
+          <p className="font-display text-2xl" style={{ color: 'var(--accent)' }}>${Intl.NumberFormat('es-CO').format(totalSegundos)}</p>
         </div>
       </div>
 
       {/* Tabla de Eventos */}
-      <div className="bg-gradient-to-br from-green-900/20 to-black/40 backdrop-blur-md border border-green-700/30 rounded-2xl p-8">
+      <div className="card p-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-heading text-2xl text-gradient-green">Eventos Completados</h2>
+          <h2 className="font-display text-2xl" style={{ color: 'var(--foreground)' }}>Eventos Completados</h2>
           <div className="text-right">
-            <div className="font-mono text-lg text-white font-bold">{rows.length}</div>
-            <div className="font-subheading text-xs text-green-300/80 uppercase tracking-wider">Total</div>
+            <div className="font-display text-lg font-bold" style={{ color: 'var(--accent)' }}>{rows.length}</div>
+            <div className="font-caption text-xs uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Total</div>
           </div>
         </div>
         <FechasTable initialData={rows} basePath="/historial" />

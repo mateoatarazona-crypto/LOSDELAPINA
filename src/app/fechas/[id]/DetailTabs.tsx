@@ -446,7 +446,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
                     </div>
                     <div>
                       <div className="text-zinc-600">Ganancia neta:</div>
-                      <div className="font-semibold text-green-600">{fmtMoney(artist.gananciaNeta)}</div>
+                      <div className="font-semibold text-cyan-400">{fmtMoney(artist.gananciaNeta)}</div>
                     </div>
                   </div>
                 </div>
@@ -468,7 +468,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
                 onClick={() => setShowAddPago((v) => !v)}
                 disabled={saldoPendiente <= 0 || excedeSaldo}
                 data-testid="btn-toggle-pago"
-                className={`px-3 py-2 text-sm rounded text-white ${saldoPendiente <= 0 || excedeSaldo ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+                className={`px-3 py-2 text-sm rounded text-white ${saldoPendiente <= 0 || excedeSaldo ? 'bg-gray-400 cursor-not-allowed' : 'bg-cyan-600 hover:bg-cyan-700'}`}
               >
                 {showAddPago ? 'Cerrar' : saldoPendiente <= 0 ? 'Saldo completo' : '+ Agregar pago'}
               </button>
@@ -477,10 +477,10 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
             {/* Resumen de saldo */}
             <div className={`bg-zinc-50 p-4 rounded-lg space-y-2 ${excedeSaldo ? 'border-red-300 border-2' : ''}`}>
               <div className="flex justify-between"><span>Total negociado:</span><span data-testid="summary-total-negociado" className="font-semibold">{fmtMoney(totalNegociado)}</span></div>
-              <div className="flex justify-between"><span>Total pagos:</span><span data-testid="summary-total-pagos" className="font-semibold text-green-600">{fmtMoney(totalPagos)}</span></div>
-              <div className={`border-t pt-2 flex justify-between font-bold ${excedeSaldo ? 'text-red-600' : saldoPendiente === 0 ? 'text-green-600' : 'text-blue-600'}`}>
-                <span>Saldo pendiente:</span>
-                <span data-testid="summary-saldo-pendiente">{fmtMoney(saldoPendiente)}</span>
+              <div className="flex justify-between"><span>Total pagos:</span><span data-testid="summary-total-pagos" className="font-semibold text-cyan-400">{fmtMoney(totalPagos)}</span></div>
+              <div className={`border-t pt-2 flex justify-between font-bold ${excedeSaldo ? 'text-magenta-400' : saldoPendiente === 0 ? 'text-cyan-400' : 'text-blue-400'}`}>
+                 <span>Saldo pendiente:</span>
+                 <span data-testid="summary-saldo-pendiente">{fmtMoney(saldoPendiente)}</span>
               </div>
               {excedeSaldo && (
                 <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
@@ -507,7 +507,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
                 {pagoError && <div className="text-xs text-red-600">{pagoError}</div>}
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setShowAddPago(false)} className="px-3 py-1.5 text-sm border rounded">Cancelar</button>
-                  <button disabled={pagoSaving || saldoPendiente <= 0} onClick={addPago} data-testid="btn-guardar-pago" className={`px-3 py-1.5 text-sm rounded text-white disabled:opacity-50 ${saldoPendiente <= 0 ? 'bg-gray-400' : 'bg-green-600'}`}>{pagoSaving ? 'Guardando…' : 'Guardar pago'}</button>
+                  <button disabled={pagoSaving || saldoPendiente <= 0} onClick={addPago} data-testid="btn-guardar-pago" className={`px-3 py-1.5 text-sm rounded text-white disabled:opacity-50 ${saldoPendiente <= 0 ? 'bg-gray-400' : 'bg-cyan-600'}`}>{pagoSaving ? 'Guardando…' : 'Guardar pago'}</button>
                 </div>
               </div>
             )}
@@ -536,7 +536,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
                         {pagoError && <div className="text-xs text-red-600">{pagoError}</div>}
                         <div className="flex gap-2 justify-end">
                           <button onClick={cancelEditPago} className="px-3 py-1.5 text-sm border rounded">Cancelar</button>
-                          <button disabled={pagoSaving} onClick={() => saveEditPago(pago.id)} className="px-3 py-1.5 text-sm rounded bg-green-600 text-white disabled:opacity-50">{pagoSaving ? 'Guardando…' : 'Guardar'}</button>
+                          <button disabled={pagoSaving} onClick={() => saveEditPago(pago.id)} className="px-3 py-1.5 text-sm rounded bg-cyan-600 text-white disabled:opacity-50">{pagoSaving ? 'Guardando…' : 'Guardar'}</button>
                         </div>
                       </div>
                     ) : (

@@ -124,7 +124,7 @@ export default function FinancialAnalysisPage() {
         {portfolioMetrics && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex items-center gap-2 mb-6">
-              <BarChart3 className="h-6 w-6 text-green-600" />
+              <BarChart3 className="h-6 w-6 text-cyan-400" />
               <h2 className="text-2xl font-semibold text-gray-800">Resumen del Portafolio</h2>
             </div>
             
@@ -133,9 +133,9 @@ export default function FinancialAnalysisPage() {
                 <p className="text-sm text-gray-600">Total Eventos</p>
                 <p className="text-3xl font-bold text-blue-600">{portfolioMetrics.totalEventos}</p>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-center p-4 bg-cyan-50 rounded-lg">
                 <p className="text-sm text-gray-600">Ingresos Totales</p>
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-cyan-400">
                   ${portfolioMetrics.totalIngresos.toLocaleString()}
                 </p>
               </div>
@@ -146,11 +146,11 @@ export default function FinancialAnalysisPage() {
                 </p>
               </div>
               <div className={`text-center p-4 rounded-lg ${
-                portfolioMetrics.totalRentabilidad >= 0 ? 'bg-green-50' : 'bg-red-50'
+                portfolioMetrics.totalRentabilidad >= 0 ? 'bg-cyan-50' : 'bg-red-50'
               }`}>
                 <p className="text-sm text-gray-600">Rentabilidad Total</p>
                 <p className={`text-3xl font-bold ${
-                  portfolioMetrics.totalRentabilidad >= 0 ? 'text-green-600' : 'text-red-600'
+                  portfolioMetrics.totalRentabilidad >= 0 ? 'text-cyan-400' : 'text-magenta-400'
                 }`}>
                   ${portfolioMetrics.totalRentabilidad.toLocaleString()}
                 </p>
@@ -271,7 +271,7 @@ export default function FinancialAnalysisPage() {
                       </p>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      balance.estado === 'rentable' ? 'bg-green-100 text-green-800' :
+                      balance.estado === 'rentable' ? 'bg-cyan-100 text-cyan-800' :
                       balance.estado === 'perdida' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                     }`}>
                       {balance.estado.toUpperCase()}
@@ -282,7 +282,7 @@ export default function FinancialAnalysisPage() {
                     <div className="text-center p-3 bg-blue-50 rounded">
                       <p className="text-xs text-gray-600">Rentabilidad</p>
                       <p className={`text-lg font-bold ${
-                        balance.rentabilidadBruta >= 0 ? 'text-green-600' : 'text-red-600'
+                        balance.rentabilidadBruta >= 0 ? 'text-cyan-400' : 'text-magenta-400'
                       }`}>
                         {balance.rentabilidadBruta.toFixed(1)}%
                       </p>
@@ -291,15 +291,15 @@ export default function FinancialAnalysisPage() {
                       <p className="text-xs text-gray-600">% Gastado</p>
                       <p className={`text-lg font-bold ${
                         balance.porcentajeGastado > 80 ? 'text-red-600' : 
-                        balance.porcentajeGastado > 60 ? 'text-yellow-600' : 'text-green-600'
+                        balance.porcentajeGastado > 60 ? 'text-yellow-600' : 'text-cyan-400'
                       }`}>
                         {balance.porcentajeGastado.toFixed(1)}%
                       </p>
                     </div>
-                    <div className="text-center p-3 bg-green-50 rounded">
+                    <div className="text-center p-3 bg-cyan-50 rounded">
                       <p className="text-xs text-gray-600">Saldo</p>
                       <p className={`text-lg font-bold ${
-                        balance.saldoRestante >= 0 ? 'text-green-600' : 'text-red-600'
+                        balance.saldoRestante >= 0 ? 'text-cyan-400' : 'text-magenta-400'
                       }`}>
                         ${balance.saldoRestante.toLocaleString()}
                       </p>
@@ -307,7 +307,7 @@ export default function FinancialAnalysisPage() {
                     <div className="text-center p-3 bg-purple-50 rounded">
                       <p className="text-xs text-gray-600">Riesgo</p>
                       <p className={`text-lg font-bold ${
-                        balance.riesgoPresupuesto === 'bajo' ? 'text-green-600' :
+                        balance.riesgoPresupuesto === 'bajo' ? 'text-cyan-400' :
                         balance.riesgoPresupuesto === 'medio' ? 'text-yellow-600' : 'text-red-600'
                       }`}>
                         {balance.riesgoPresupuesto.toUpperCase()}

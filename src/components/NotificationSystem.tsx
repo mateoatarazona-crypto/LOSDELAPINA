@@ -112,10 +112,10 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
     switch (notification.type) {
       case 'success':
         return {
-          bg: 'bg-green-900/90',
-          border: 'border-green-500/50',
-          icon: (
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          bg: 'bg-cyan-900/90',
+      border: 'border-cyan-500/50',
+      icon: (
+        <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           )
@@ -186,7 +186,7 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
             {notification.action && (
               <button
                 onClick={notification.action.onClick}
-                className="mt-2 text-xs font-mono text-green-400 hover:text-green-300 transition-colors duration-200 underline"
+                className="mt-2 text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors duration-200 underline"
               >
                 {notification.action.label}
               </button>

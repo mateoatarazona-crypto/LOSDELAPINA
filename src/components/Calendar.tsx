@@ -30,7 +30,7 @@ const MONTHS = [
 const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 const STATUS_CONFIG = {
-  confirmada: { label: 'Confirmada', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
+  confirmada: { label: 'Confirmada', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
   pendiente: { label: 'Pendiente', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
   cancelada: { label: 'Cancelada', color: 'bg-red-500/20 text-red-400 border-red-500/30' }
 }
@@ -189,7 +189,7 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
     // Días vacíos del mes anterior
     for (let i = 0; i < firstDay; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-12 border border-green-700/10"></div>
+        <div key={`empty-${i}`} className="h-12 border border-cyan-700/10"></div>
       )
     }
 
@@ -204,15 +204,15 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
         <div
           key={day}
           onClick={() => handleDateClick(day)}
-          className={`h-12 border border-green-700/10 cursor-pointer hover:bg-green-500/10 transition-colors duration-200 relative p-1 ${
-            isToday ? 'bg-green-500/20 border-green-500/50' : ''
-          } ${
-            isSelected ? 'bg-green-500/30 border-green-500/70' : ''
-          }`}
+          className={`h-12 border border-cyan-700/10 cursor-pointer hover:bg-cyan-500/10 transition-colors duration-200 relative p-1 ${
+          isToday ? 'bg-cyan-500/20 border-cyan-500/50' : ''
+        } ${
+          isSelected ? 'bg-cyan-500/30 border-cyan-500/70' : ''
+        }`}
         >
           <span className={`text-xs font-mono ${
-            isToday ? 'text-green-400 font-bold' : 'text-white'
-          }`}>
+          isToday ? 'text-cyan-400 font-bold' : 'text-white'
+        }`}>
             {day}
           </span>
           
@@ -223,13 +223,13 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
                   <div
                     key={event.id}
                     className={`w-2 h-2 rounded-full ${
-                      event.status === 'confirmada' ? 'bg-green-400' :
+                      event.status === 'confirmada' ? 'bg-cyan-400' :
                       event.status === 'pendiente' ? 'bg-yellow-400' : 'bg-red-400'
                     }`}
                   />
                 ))}
                 {dayEvents.length > 2 && (
-                  <span className="text-xs text-green-300">+{dayEvents.length - 2}</span>
+                  <span className="text-xs text-cyan-300">+{dayEvents.length - 2}</span>
                 )}
               </div>
             </div>
@@ -242,18 +242,18 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
   }
 
   return (
-    <div className={`bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-6 ${className}`}>
+    <div className={`bg-black/20 backdrop-blur-sm border border-cyan-700/30 rounded-xl p-6 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+          <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
           <div>
             <h3 className="font-subheading text-white text-lg font-semibold">Calendario de Presentaciones</h3>
-            <p className="text-green-300/80 text-sm font-mono">Gestiona tus fechas</p>
+            <p className="text-cyan-300/80 text-sm font-mono">Gestiona tus fechas</p>
           </div>
         </div>
       </div>
@@ -262,7 +262,7 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={handlePrevMonth}
-          className="bg-green-500/20 hover:bg-green-500/30 text-green-400 p-2 rounded-lg transition-all duration-200 border border-green-500/30"
+          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 p-2 rounded-lg transition-all duration-200 border border-cyan-500/30"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -275,7 +275,7 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
         
         <button
           onClick={handleNextMonth}
-          className="bg-green-500/20 hover:bg-green-500/30 text-green-400 p-2 rounded-lg transition-all duration-200 border border-green-500/30"
+          className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 p-2 rounded-lg transition-all duration-200 border border-cyan-500/30"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -289,13 +289,13 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
         <div className="grid grid-cols-7 gap-0 mb-2">
           {DAYS.map(day => (
             <div key={day} className="h-8 flex items-center justify-center">
-              <span className="text-green-300 text-xs font-mono font-semibold">{day}</span>
+              <span className="text-cyan-300 text-xs font-mono font-semibold">{day}</span>
             </div>
           ))}
         </div>
         
         {/* Calendar days */}
-        <div className="grid grid-cols-7 gap-0 border border-green-700/30 rounded-lg overflow-hidden">
+        <div className="grid grid-cols-7 gap-0 border border-cyan-700/30 rounded-lg overflow-hidden">
           {renderCalendarDays()}
         </div>
       </div>

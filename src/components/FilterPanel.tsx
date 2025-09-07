@@ -69,17 +69,17 @@ export default function FilterPanel({
   const activeFilterCount = Object.keys(filters).length
 
   return (
-    <div className={`bg-black/20 backdrop-blur-sm border border-green-700/30 rounded-xl p-4 ${className}`}>
+    <div className={`bg-black/20 backdrop-blur-sm border border-cyan-700/30 rounded-xl p-4 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
           </svg>
           <h3 className="font-subheading text-white text-sm font-semibold">
             Filtros
             {activeFilterCount > 0 && (
-              <span className="ml-2 px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">
+              <span className="ml-2 px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -90,7 +90,7 @@ export default function FilterPanel({
           {activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
-              className="text-xs text-green-400 hover:text-green-300 transition-colors duration-200 font-mono"
+              className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors duration-200 font-mono"
             >
               Limpiar
             </button>
@@ -98,7 +98,7 @@ export default function FilterPanel({
           
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-green-400 hover:text-green-300 transition-all duration-200 transform hover:scale-110"
+            className="text-cyan-400 hover:text-cyan-300 transition-all duration-200 transform hover:scale-110"
           >
             <svg 
               className={`w-4 h-4 transition-transform duration-200 ${
@@ -120,7 +120,7 @@ export default function FilterPanel({
       }`}>
         {filterGroups.map((group) => (
           <div key={group.key} className="space-y-2">
-            <h4 className="font-body text-green-300 text-xs font-medium uppercase tracking-wider">
+            <h4 className="font-body text-cyan-300 text-xs font-medium uppercase tracking-wider">
               {group.title}
             </h4>
             
@@ -132,9 +132,9 @@ export default function FilterPanel({
                   max={group.max || 100}
                   value={filters[group.key] || group.min || 0}
                   onChange={(e) => handleFilterChange(group.key, parseInt(e.target.value), 'range')}
-                  className="w-full h-2 bg-green-900/30 rounded-lg appearance-none cursor-pointer slider"
+                  className="w-full h-2 bg-cyan-900/30 rounded-lg appearance-none cursor-pointer slider"
                 />
-                <div className="flex justify-between text-xs text-green-400 font-mono">
+                <div className="flex justify-between text-xs text-cyan-400 font-mono">
                   <span>{group.min || 0}</span>
                   <span className="text-white font-semibold">
                     {filters[group.key] || group.min || 0}
@@ -152,7 +152,7 @@ export default function FilterPanel({
                   return (
                     <label 
                       key={option.value} 
-                      className="flex items-center gap-2 p-2 rounded-lg hover:bg-green-900/20 cursor-pointer transition-colors duration-200 group"
+                      className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-900/20 cursor-pointer transition-colors duration-200 group"
                     >
                       <input
                         type={group.type}
@@ -167,8 +167,8 @@ export default function FilterPanel({
                         group.type === 'checkbox' ? 'rounded-sm' : 'rounded-full'
                       } ${
                         isSelected 
-                          ? 'bg-green-500 border-green-500' 
-                          : 'border-green-600/50 group-hover:border-green-500/70'
+                          ? 'bg-cyan-500 border-cyan-500'
+                : 'border-cyan-600/50 group-hover:border-cyan-500/70'
                       }`}>
                         {isSelected && (
                           <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -178,11 +178,11 @@ export default function FilterPanel({
                       </div>
                       
                       <span className={`text-sm font-body transition-colors duration-200 ${
-                        isSelected ? 'text-white' : 'text-green-200 group-hover:text-white'
+                        isSelected ? 'text-white' : 'text-cyan-200 group-hover:text-white'
                       }`}>
                         {option.label}
                         {option.count !== undefined && (
-                          <span className="ml-1 text-xs text-green-400 font-mono">
+                          <span className="ml-1 text-xs text-cyan-400 font-mono">
                             ({option.count})
                           </span>
                         )}

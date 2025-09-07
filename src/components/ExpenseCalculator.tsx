@@ -35,7 +35,7 @@ interface ExpenseCalculatorProps {
 const EXPENSE_CATEGORIES = {
   Viajes: { label: 'Viajes', icon: '✈️', color: 'text-blue-500' },
   Alojamiento: { label: 'Alojamiento', icon: '🏨', color: 'text-purple-500' },
-  TransporteLocal: { label: 'Transporte Local', icon: '🚗', color: 'text-green-500' },
+  TransporteLocal: { label: 'Transporte Local', icon: '🚗', color: 'text-cyan-500' },
   TecnicaBackline: { label: 'Técnica/Backline', icon: '🎵', color: 'text-orange-500' },
   VisasPermisos: { label: 'Visas/Permisos', icon: '📋', color: 'text-red-500' },
   Staff: { label: 'Staff', icon: '👥', color: 'text-yellow-500' },
@@ -220,9 +220,9 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
       {/* Balance Overview */}
       {balance && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div className="text-sm text-green-600 font-medium mb-1">Ingresos Totales</div>
-            <div className="text-2xl font-bold text-green-700">
+          <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+          <div className="text-sm text-cyan-600 font-medium mb-1">Ingresos Totales</div>
+          <div className="text-2xl font-bold text-cyan-700">
               ${balance.totalIngresos.toLocaleString()}
             </div>
           </div>
@@ -283,7 +283,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <p className="text-sm text-gray-600">Rentabilidad Bruta</p>
               <p className={`text-xl font-bold ${
-                financialBalance.rentabilidadBruta >= 0 ? 'text-green-600' : 'text-red-600'
+                financialBalance.rentabilidadBruta >= 0 ? 'text-cyan-400' : 'text-magenta-400'
               }`}>
                 {financialBalance.rentabilidadBruta.toFixed(1)}%
               </p>
@@ -292,7 +292,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
               <p className="text-sm text-gray-600">% Gastado</p>
               <p className={`text-xl font-bold ${
                 financialBalance.porcentajeGastado > 80 ? 'text-red-600' : 
-                financialBalance.porcentajeGastado > 60 ? 'text-yellow-600' : 'text-green-600'
+                financialBalance.porcentajeGastado > 60 ? 'text-yellow-600' : 'text-cyan-400'
               }`}>
                 {financialBalance.porcentajeGastado.toFixed(1)}%
               </p>
@@ -300,7 +300,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
             <div className="text-center p-4 bg-indigo-50 rounded-lg">
               <p className="text-sm text-gray-600">Estado</p>
               <p className={`text-lg font-bold capitalize ${
-                financialBalance.estado === 'rentable' ? 'text-green-600' :
+                financialBalance.estado === 'rentable' ? 'text-cyan-400' :
                 financialBalance.estado === 'perdida' ? 'text-red-600' : 'text-yellow-600'
               }`}>
                 {financialBalance.estado}
@@ -309,7 +309,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
             <div className="text-center p-4 bg-cyan-50 rounded-lg">
               <p className="text-sm text-gray-600">Riesgo</p>
               <p className={`text-lg font-bold capitalize ${
-                financialBalance.riesgoPresupuesto === 'bajo' ? 'text-green-600' :
+                financialBalance.riesgoPresupuesto === 'bajo' ? 'text-cyan-400' :
                 financialBalance.riesgoPresupuesto === 'medio' ? 'text-yellow-600' : 'text-red-600'
               }`}>
                 {financialBalance.riesgoPresupuesto}
@@ -385,7 +385,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
                   ? 'bg-red-500' 
                   : balance.porcentajeGastado > 80 
                   ? 'bg-yellow-500' 
-                  : 'bg-green-500'
+                  : 'bg-cyan-500'
               }`}
               style={{ width: `${Math.min(balance.porcentajeGastado, 100)}%` }}
             />

@@ -63,8 +63,8 @@ const getEstadoBadgeColor = (estado: string) => {
     'Negociacion': 'bg-yellow-100 text-yellow-800',
     'Contratada': 'bg-blue-100 text-blue-800',
     'PendienteAnticipo': 'bg-orange-100 text-orange-800',
-    'Confirmada': 'bg-green-100 text-green-800',
-    'Ejecutada': 'bg-purple-100 text-purple-800',
+    'Confirmada': 'bg-cyan-100 text-cyan-800',
+    'Ejecutada': 'bg-magenta-100 text-magenta-800',
     'Cerrada': 'bg-gray-100 text-gray-800',
     'Cancelada': 'bg-red-100 text-red-800',
   };
@@ -154,66 +154,68 @@ export default function UtilidadesPage() {
   const { eventos, estadisticas } = data;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Utilidades por Fecha</h1>
-        <div className="text-sm text-gray-600">
+    <div className="space-y-6 p-4 md:p-8" style={{ background: 'var(--background)' }}>
+      <div className="card p-8 text-center">
+        <h1 className="font-display text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+          💰 Utilidades por Fecha
+        </h1>
+        <p className="font-caption text-lg" style={{ color: 'var(--foreground-secondary)' }}>
           {eventos.length} eventos registrados
-        </div>
+        </p>
       </div>
 
       {/* Estadísticas Generales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="text-sm font-medium">Ingresos Totales</h3>
+            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Ingresos Totales</h3>
             <DollarSignIcon />
           </div>
-          <div className="text-2xl font-bold">{formatCurrency(estadisticas.ingresosTotales)}</div>
+          <div className="font-display text-2xl font-bold" style={{ color: 'var(--accent)' }}>{formatCurrency(estadisticas.ingresosTotales)}</div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="text-sm font-medium">Utilidad Total</h3>
+            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Utilidad Total</h3>
             <TrendingUpIcon />
           </div>
-          <div className={`text-2xl font-bold ${
-            estadisticas.utilidadTotal >= 0 ? 'text-green-600' : 'text-red-600'
-          }`}>
+          <div className={`font-display text-2xl font-bold ${
+            estadisticas.utilidadTotal >= 0 ? '' : ''
+          }`} style={{ color: 'var(--accent)' }}>
             {formatCurrency(estadisticas.utilidadTotal)}
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="text-sm font-medium">Margen Promedio</h3>
+            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Margen Promedio</h3>
             <TrendingUpIcon />
           </div>
-          <div className={`text-2xl font-bold ${
-            estadisticas.margenPromedioUtilidad >= 0 ? 'text-green-600' : 'text-red-600'
-          }`}>
+          <div className={`font-display text-2xl font-bold ${
+            estadisticas.margenPromedioUtilidad >= 0 ? '' : ''
+          }`} style={{ color: 'var(--accent)' }}>
             {estadisticas.margenPromedioUtilidad.toFixed(1)}%
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="text-sm font-medium">Eventos Rentables</h3>
+            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Eventos Rentables</h3>
             <CalendarIcon />
           </div>
-          <div className="text-2xl font-bold">
+          <div className="font-display text-2xl font-bold" style={{ color: 'var(--accent)' }}>
             {estadisticas.eventosRentables}/{estadisticas.totalEventos}
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs" style={{ color: 'var(--foreground-secondary)' }}>
             {((estadisticas.eventosRentables / estadisticas.totalEventos) * 100).toFixed(1)}% rentables
           </p>
         </div>
       </div>
 
       {/* Tabla de Eventos */}
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">Detalle por Evento</h2>
+      <div className="card">
+        <div className="p-6 border-b" style={{ borderColor: 'var(--background-secondary)' }}>
+          <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--foreground)' }}>Detalle por Evento</h2>
         </div>
         <div className="p-6">
           <div className="overflow-x-auto">
@@ -265,14 +267,14 @@ export default function UtilidadesPage() {
                     </td>
                     <td className="p-2 text-right">
                       <div className={`font-medium ${
-                        evento.financiero.utilidadBruta >= 0 ? 'text-green-600' : 'text-red-600'
+                        evento.financiero.utilidadBruta >= 0 ? 'text-cyan-400' : 'text-magenta-400'
                       }`}>
                         {formatCurrency(evento.financiero.utilidadBruta)}
                       </div>
                     </td>
                     <td className="p-2 text-right">
                       <div className={`font-medium ${
-                        evento.financiero.margenUtilidad >= 0 ? 'text-green-600' : 'text-red-600'
+                        evento.financiero.margenUtilidad >= 0 ? 'text-cyan-400' : 'text-magenta-400'
                       }`}>
                         {evento.financiero.margenUtilidad.toFixed(1)}%
                       </div>
