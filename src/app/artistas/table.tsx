@@ -1,0 +1,169 @@
+'use client'
+import { useMemo, useState } from 'react'
+import type { ArtistaRow } from './page'
+
+export default function ArtistasTable({ initialData }: { initialData: ArtistaRow[] }) {
+  const [data, setData] = useState<ArtistaRow[]>(initialData)
+  const [q, setQ] = useState('')
+  const [showAdd, setShowAdd] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [form, setForm] = useState({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
+  const [editForm, setEditForm] = useState({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
+
+  const filtered = useMemo(() => data.filter(d => d.nombre.toLowerCase().includes(q.toLowerCase())), [data, q])
+
+  async function refresh() {
+    const res = await fetch('/api/artistas')
+    const json = await res.json()
+    setData(json.map((a: any) => ({
+      id: a.id,
+      nombre: a.nombre,
+      genero: a.genero ?? null,
+      representante: a.representante ?? null,
+      contacto: a.contacto ?? null,
+      notas: a.notas ?? null,
+      fechasCount: a._count?.fechas ?? 0,
+    })))
+  }
+
+  async function create() {
+    if (!form.nombre.trim()) return alert('Nombre es requerido')
+    setSaving(true)
+    try {
+      const res = await fetch('/api/artistas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      if (!res.ok) throw new Error('create failed')
+      setForm({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
+      setShowAdd(false)
+      await refresh()
+    } catch (e) {
+      alert('No se pudo crear')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function startEdit(a: ArtistaRow) {
+    setEditingId(a.id)
+    setEditForm({ nombre: a.nombre, genero: a.genero || '', representante: a.representante || '', contacto: a.contacto || '', notas: a.notas || '' })
+  }
+
+  async function saveEdit(id: number) {
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/artistas/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editForm) })
+      if (!res.ok) throw new Error('update failed')
+      setEditingId(null)
+      await refresh()
+    } catch (e) {
+      alert('No se pudo actualizar')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function remove(id: number) {
+    if (!confirm('¿Eliminar artista?')) return
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/artistas/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const j = await res.json().catch(() => null)
+        throw new Error(j?.error || 'delete failed')
+      }
+      await refresh()
+    } catch (e: any) {
+      alert(e.message || 'No se pudo eliminar (puede tener fechas asociadas)')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 rounded-xl border bg-white shadow-sm flex gap-3 items-end">
+        <div>
+          <label className="block text-xs text-zinc-500">Buscar</label>
+          <input value={q} onChange={e => setQ(e.target.value)} className="border rounded px-2 py-1.5 text-sm" placeholder="Nombre…" />
+        </div>
+        <button onClick={() => setShowAdd(v => !v)} className="ml-auto px-3 py-2 text-sm rounded bg-black text-white">{showAdd ? 'Cerrar' : 'Agregar artista'}</button>
+      </div>
+
+      {showAdd && (
+        <div className="p-4 rounded-xl border bg-zinc-50 shadow-inner">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input placeholder="Nombre" className="border rounded px-2 py-1.5 text-sm" value={form.nombre} onChange={e => setForm({ ...form, nombre: e.target.value })} />
+            <input placeholder="Género" className="border rounded px-2 py-1.5 text-sm" value={form.genero} onChange={e => setForm({ ...form, genero: e.target.value })} />
+            <input placeholder="Representante" className="border rounded px-2 py-1.5 text-sm" value={form.representante} onChange={e => setForm({ ...form, representante: e.target.value })} />
+            <input placeholder="Contacto" className="border rounded px-2 py-1.5 text-sm" value={form.contacto} onChange={e => setForm({ ...form, contacto: e.target.value })} />
+            <input placeholder="Notas" className="border rounded px-2 py-1.5 text-sm" value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
+          </div>
+          <div className="mt-3">
+            <button disabled={saving} onClick={create} className="px-3 py-2 text-sm rounded bg-emerald-600 text-white disabled:opacity-50">Guardar</button>
+          </div>
+        </div>
+      )}
+
+      <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
+        <table className="min-w-full text-sm">
+          <thead>
+            <tr className="text-left border-b bg-zinc-50/60">
+              <th className="py-3 pr-4 font-medium text-zinc-600">Nombre</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600">Género</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600">Representante</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600">Contacto</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600">Notas</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600 text-right">Fechas</th>
+              <th className="py-3 pr-4 font-medium text-zinc-600">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(a => (
+              <tr key={a.id} className="border-b">
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <input className="border rounded px-2 py-1 text-sm" value={editForm.nombre} onChange={e => setEditForm({ ...editForm, nombre: e.target.value })} />
+                  ) : a.nombre}
+                </td>
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <input className="border rounded px-2 py-1 text-sm" value={editForm.genero} onChange={e => setEditForm({ ...editForm, genero: e.target.value })} />
+                  ) : (a.genero || '')}
+                </td>
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <input className="border rounded px-2 py-1 text-sm" value={editForm.representante} onChange={e => setEditForm({ ...editForm, representante: e.target.value })} />
+                  ) : (a.representante || '')}
+                </td>
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <input className="border rounded px-2 py-1 text-sm" value={editForm.contacto} onChange={e => setEditForm({ ...editForm, contacto: e.target.value })} />
+                  ) : (a.contacto || '')}
+                </td>
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <input className="border rounded px-2 py-1 text-sm" value={editForm.notas} onChange={e => setEditForm({ ...editForm, notas: e.target.value })} />
+                  ) : (a.notas || '')}
+                </td>
+                <td className="py-3 pr-4 text-right">{a.fechasCount}</td>
+                <td className="py-3 pr-4">
+                  {editingId === a.id ? (
+                    <div className="flex gap-2">
+                      <button disabled={saving} onClick={() => saveEdit(a.id)} className="underline">Guardar</button>
+                      <button onClick={() => setEditingId(null)} className="underline">Cancelar</button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button onClick={() => startEdit(a)} className="underline">Editar</button>
+                      <button onClick={() => remove(a.id)} className="underline text-red-600">Eliminar</button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}

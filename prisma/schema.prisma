@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id            Int           @id @default(autoincrement())
+  nombre        String
+  genero        String?
+  representante String?
+  contacto      String?
+  notas         String?
+  fechas        EventArtist[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Promoter {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  empresa   String?
+  ciudad    String?
+  pais      String?
+  email     String?
+  telefono  String?
+  nit       String?
+  notas     String?
+  fechas    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EstadoEvento {
+  Propuesta
+  Negociacion
+  Contratada
+  PendienteAnticipo
+  Confirmada
+  Ejecutada
+  Cerrada
+  Cancelada
+}
+
+enum CategoriaGasto {
+  Viajes
+  Alojamiento
+  TransporteLocal
+  TecnicaBackline
+  VisasPermisos
+  Staff
+  Marketing
+  Otros
+}
+
+model Event {
+  id             Int           @id @default(autoincrement())
+  fechaEvento    DateTime
+  estado         EstadoEvento
+  ciudad         String?
+  venue          String?
+  aforo          Int?
+  moneda         String        @default("COP")
+  tipoCambio     Decimal?
+  totalNegociado Decimal
+  anticipo       Decimal       @default(0)
+  segundoPago    Decimal       @default(0)
+  contratoUrl    String?
+  notasInternas  String?
+  empresarioId   Int
+  empresario     Promoter      @relation(fields: [empresarioId], references: [id])
+  gastos         Expense[]
+  artistas       EventArtist[]
+  pagos          Payment[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model EventArtist {
+  id         Int     @id @default(autoincrement())
+  fechaId    Int
+  artistaId  Int
+  porcentaje Decimal @default(0)
+  artista    Artist  @relation(fields: [artistaId], references: [id])
+  fecha      Event   @relation(fields: [fechaId], references: [id])
+
+  @@unique([fechaId, artistaId])
+}
+
+model Expense {
+  id             Int            @id @default(autoincrement())
+  fechaId        Int
+  categoria      CategoriaGasto
+  descripcion    String?
+  monto          Decimal
+  comprobanteUrl String?
+  fecha          Event          @relation(fields: [fechaId], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+enum TipoPago {
+  Anticipo
+  Segundo
+}
+
+model Payment {
+  id          Int        @id @default(autoincrement())
+  fechaId     Int
+  tipo        TipoPago
+  fechaPago   DateTime?
+  metodo      String?
+  observacion String?
+  monto       Decimal
+  fecha       Event       @relation(fields: [fechaId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum Role {
+  Admin
+  Operaciones
+  Lectura
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(Lectura)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
