@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
-    "@prisma/client": "^6.14.0",
+    "@prisma/client": "^6.15.0",
     "@tanstack/react-query": "^5.85.5",
     "@tanstack/react-table": "^8.21.3",
     "@types/bcryptjs": "^2.4.6",
@@ -41,7 +41,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
     "postcss": "^8",
-    "prisma": "^6.14.0",
+    "prisma": "^6.15.0",
     "puppeteer": "^22.15.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",

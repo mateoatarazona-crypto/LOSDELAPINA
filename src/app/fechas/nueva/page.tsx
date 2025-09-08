@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNotificationHelpers } from '@/components/NotificationSystem'
+import DatePicker from '@/components/DatePicker'
 
 interface Artista {
   id: number
@@ -174,11 +175,10 @@ export default function NuevaFechaPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-purple-300 text-sm font-medium mb-2">Fecha del Evento *</label>
-                <input
-                  type="datetime-local"
+                <DatePicker
                   value={formData.fechaEvento}
-                  onChange={(e) => handleInputChange('fechaEvento', e.target.value)}
-                  className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
+                  onChange={(value) => handleInputChange('fechaEvento', value)}
+                  placeholder="Seleccionar fecha y hora del evento"
                   required
                 />
               </div>
