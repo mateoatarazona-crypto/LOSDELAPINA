@@ -17,11 +17,33 @@ const handler = NextAuth({
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
+        // Try Supabase first, fallback to Prisma for compatibility
+        let user;
+        try {
+          const { data: supabaseUser, error } = await supabase
+            .from('User')
+            .select('*')
+            .eq('email', credentials.email)
+            .single();
+          
+          if (supabaseUser && !error) {
+            user = supabaseUser;
+          } else {
+            // Fallback to Prisma
+            user = await prisma.user.findUnique({
+              where: {
+                email: credentials.email
+              }
+            });
           }
-        });
+        } catch (error) {
+          // Fallback to Prisma if Supabase fails
+          user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email
+            }
+          });
+        }
 
         if (!user) {
           return null;
