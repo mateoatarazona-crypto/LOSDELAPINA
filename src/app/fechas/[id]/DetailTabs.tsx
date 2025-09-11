@@ -2,9 +2,30 @@
 
 import { useState, useEffect } from 'react'
 import { CategoriaGasto, TipoPago } from '@prisma/client'
+import FileUpload from '@/components/ui/file-upload'
+import { useFileUpload } from '@/hooks/use-file-upload'
+import { Button } from '@/components/ui/button'
+import { Receipt, Music, Truck, Hotel, Users, Megaphone, Wrench, FileText } from 'lucide-react'
 
 // Definir listas de enums para selects
 const categorias = Object.values(CategoriaGasto) as CategoriaGasto[]
+
+// Mapeo de categorías con iconos y colores
+const categoryMapping: Record<string, { icon: string; color: string }> = {
+  'Giras': { icon: '🎵', color: 'text-purple-600' },
+  'Produccion': { icon: '🎛️', color: 'text-blue-600' },
+  'Merchandising': { icon: '👕', color: 'text-green-600' },
+  'Promocion': { icon: '📢', color: 'text-pink-600' },
+  'EquipoTecnico': { icon: '🔧', color: 'text-orange-600' },
+  'Viajes': { icon: '✈️', color: 'text-indigo-600' },
+  'Alojamiento': { icon: '🏨', color: 'text-cyan-600' },
+  'TransporteLocal': { icon: '🚐', color: 'text-teal-600' },
+  'TecnicaBackline': { icon: '🎸', color: 'text-red-600' },
+  'VisasPermisos': { icon: '📋', color: 'text-yellow-600' },
+  'Staff': { icon: '👥', color: 'text-emerald-600' },
+  'Marketing': { icon: '📱', color: 'text-rose-600' },
+  'Otros': { icon: '📄', color: 'text-gray-600' }
+}
 const tiposPago = Object.values(TipoPago) as TipoPago[]
 
 type Expense = {
@@ -13,6 +34,13 @@ type Expense = {
   descripcion: string | null
   monto: number
   comprobanteUrl: string | null
+  receiptFiles?: Array<{
+    id: number
+    fileName: string
+    fileUrl: string
+    fileSize: number | null
+    mimeType: string | null
+  }>
   createdAt: string
 }
 
@@ -43,6 +71,8 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
   const [loading, setLoading] = useState(false)
   const [showAddGasto, setShowAddGasto] = useState(false)
   const [newGasto, setNewGasto] = useState<{ categoria: CategoriaGasto | ''; descripcion: string; monto: number | ''; comprobanteUrl: string }>({ categoria: '', descripcion: '', monto: '', comprobanteUrl: '' })
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const { uploadFiles, uploading } = useFileUpload()
   const [gastoEditId, setGastoEditId] = useState<number | null>(null)
   const [editGasto, setEditGasto] = useState<{ categoria: CategoriaGasto | ''; descripcion: string; monto: number | ''; comprobanteUrl: string }>({ categoria: '', descripcion: '', monto: '', comprobanteUrl: '' })
   const [gastoSaving, setGastoSaving] = useState(false)
@@ -104,6 +134,24 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
     }
     try {
       setGastoSaving(true)
+      
+      // Subir archivos si hay alguno
+      let uploadedFileUrls: string[] = []
+      if (uploadedFiles.length > 0) {
+        try {
+          const uploadResults = await uploadFiles(uploadedFiles, {
+            bucket: 'expense-receipts',
+            folder: `event-${eventId}`,
+            maxSize: 10,
+            allowedTypes: ['image/*', '.pdf', '.doc', '.docx']
+          })
+          uploadedFileUrls = uploadResults.map(result => result.url)
+        } catch (uploadError) {
+          console.error('Error uploading files:', uploadError)
+          alert('Error subiendo archivos. El gasto se creará sin comprobantes.')
+        }
+      }
+      
       const res = await fetch(`/api/fechas/${eventId}/gastos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -111,7 +159,13 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
           categoria: newGasto.categoria,
           descripcion: newGasto.descripcion || null,
           monto: Number(newGasto.monto),
-          comprobanteUrl: newGasto.comprobanteUrl || null,
+          comprobanteUrl: uploadedFileUrls[0] || newGasto.comprobanteUrl || null,
+          receiptFiles: uploadedFiles.map((file, index) => ({
+            fileName: file.name,
+            fileUrl: uploadedFileUrls[index] || '',
+            fileSize: file.size,
+            mimeType: file.type
+          }))
         }),
       })
       if (!res.ok) throw new Error('Error creando gasto')
@@ -119,6 +173,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
       setGastos((prev) => [created, ...prev])
       setShowAddGasto(false)
       setNewGasto({ categoria: '', descripcion: '', monto: '', comprobanteUrl: '' })
+      setUploadedFiles([])
     } catch (e) {
       console.error(e)
       alert('No se pudo crear el gasto')
@@ -229,9 +284,10 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
       setShowAddPago(false)
       setNewPago({ tipo: '', monto: '', fechaPago: '', metodo: '', observacion: '' })
       setPagoError(null)
-    } catch (e: any) {
+    } catch (e) {
       console.error(e)
-      alert(e?.message || 'No se pudo crear el pago')
+      const message = e instanceof Error ? e.message : 'No se pudo crear el pago'
+      alert(message)
     } finally {
       setPagoSaving(false)
     }
@@ -298,9 +354,10 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
       setPagos((prev) => prev.map((p) => (p.id === id ? updated : p)))
       cancelEditPago()
       setPagoError(null)
-    } catch (e: any) {
+    } catch (e) {
       console.error(e)
-      alert(e?.message || 'No se pudo actualizar el pago')
+      const message = e instanceof Error ? e.message : 'No se pudo actualizar el pago'
+      alert(message)
     } finally {
       setPagoSaving(false)
     }
@@ -339,27 +396,97 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
       case 'gastos':
         return (
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="font-medium">Gastos del evento</h3>
-              <button onClick={() => setShowAddGasto((v) => !v)} className="px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">{showAddGasto ? 'Cerrar' : '+ Agregar gasto'}</button>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+              <h3 className="font-medium text-base sm:text-lg">Gastos del evento</h3>
+              <button onClick={() => setShowAddGasto((v) => !v)} className="px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 w-full sm:w-auto">{showAddGasto ? 'Cerrar' : '+ Agregar gasto'}</button>
             </div>
 
             {showAddGasto && (
-              <div className="border rounded-lg p-3 space-y-2">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                  <select value={newGasto.categoria} onChange={(e) => setNewGasto((s) => ({ ...s, categoria: e.target.value as CategoriaGasto }))} className="border rounded px-2 py-1 text-sm">
-                    <option value="">Categoría</option>
-                    {categorias.map((c: CategoriaGasto) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                  <input value={newGasto.descripcion} onChange={(e) => setNewGasto((s) => ({ ...s, descripcion: e.target.value }))} placeholder="Descripción" className="border rounded px-2 py-1 text-sm" />
-                  <input value={newGasto.monto} onChange={(e) => setNewGasto((s) => ({ ...s, monto: e.target.value === '' ? '' : Number(e.target.value) }))} placeholder="Monto" type="number" className="border rounded px-2 py-1 text-sm" />
-                  <input value={newGasto.comprobanteUrl} onChange={(e) => setNewGasto((s) => ({ ...s, comprobanteUrl: e.target.value }))} placeholder="URL comprobante (opcional)" className="border rounded px-2 py-1 text-sm" />
+              <div className="border rounded-lg p-3 sm:p-4 space-y-3 sm:space-y-4 bg-white shadow-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Categoría</label>
+                    <select 
+                      value={newGasto.categoria} 
+                      onChange={(e) => setNewGasto((s) => ({ ...s, categoria: e.target.value as CategoriaGasto }))} 
+                      className="w-full border border-gray-300 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Seleccionar categoría</option>
+                      {categorias.map((c: CategoriaGasto) => {
+                        const categoryInfo = categoryMapping[c] || { icon: '📄', color: 'text-gray-600' };
+                        return (
+                          <option key={c} value={c}>
+                            {categoryInfo.icon} {c}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Monto</label>
+                    <input 
+                      value={newGasto.monto} 
+                      onChange={(e) => setNewGasto((s) => ({ ...s, monto: e.target.value === '' ? '' : Number(e.target.value) }))} 
+                      placeholder="0" 
+                      type="number" 
+                      className="w-full border border-gray-300 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    />
+                  </div>
                 </div>
-                <div className="flex gap-2 justify-end">
-                  <button onClick={() => setShowAddGasto(false)} className="px-3 py-1.5 text-sm border rounded">Cancelar</button>
-                  <button disabled={gastoSaving} onClick={addGasto} className="px-3 py-1.5 text-sm rounded bg-blue-600 text-white disabled:opacity-50">{gastoSaving ? 'Guardando…' : 'Guardar gasto'}</button>
+                
+                <div className="space-y-2">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">Descripción</label>
+                  <input 
+                    value={newGasto.descripcion} 
+                    onChange={(e) => setNewGasto((s) => ({ ...s, descripcion: e.target.value }))} 
+                    placeholder="Descripción del gasto" 
+                    className="w-full border border-gray-300 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">Comprobantes de pago</label>
+                  <FileUpload
+                    onFilesChange={setUploadedFiles}
+                    acceptedTypes={['image/*', '.pdf']}
+                    maxFiles={5}
+                    maxSize={10} // 10MB
+                  />
+                  {uploadedFiles.length > 0 && (
+                    <div className="text-xs text-gray-500">
+                      {uploadedFiles.length} archivo(s) seleccionado(s)
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-end pt-2 border-t">
+                  <button 
+                    onClick={() => {
+                      setShowAddGasto(false);
+                      setUploadedFiles([]);
+                    }} 
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors order-2 sm:order-1"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    disabled={gastoSaving || !newGasto.categoria || !newGasto.monto} 
+                    onClick={addGasto} 
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 order-1 sm:order-2"
+                  >
+                    {gastoSaving ? (
+                      <>
+                        <div className="w-3 sm:w-4 h-3 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span className="hidden sm:inline">Guardando…</span>
+                        <span className="sm:hidden">Guardando</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="hidden sm:inline">Guardar gasto</span>
+                        <span className="sm:hidden">Guardar</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             )}
@@ -389,17 +516,60 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">{gasto.categoria}</div>
-                          <div className="text-sm text-zinc-600">{gasto.descripcion || 'Sin descripción'}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-semibold">{fmtMoney(Number(gasto.monto))}</div>
-                          <div className="text-xs text-zinc-500">{new Date(gasto.createdAt).toLocaleDateString('es-CO')}</div>
-                          <div className="flex gap-3 justify-end mt-2 text-sm">
-                            <button className="underline" onClick={() => startEditGasto(gasto)}>Editar</button>
-                            <button className="underline text-red-600" onClick={() => deleteGasto(gasto.id)}>Eliminar</button>
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-lg">
+                                {categoryMapping[gasto.categoria]?.icon || '📄'}
+                              </span>
+                              <span className={`font-medium ${categoryMapping[gasto.categoria]?.color || 'text-gray-700'}`}>
+                                {gasto.categoria}
+                              </span>
+                            </div>
+                            <div className="text-sm text-zinc-600 mb-2">
+                              {gasto.descripcion || 'Sin descripción'}
+                            </div>
+                            
+                            {/* Mostrar archivos adjuntos */}
+                            {gasto.receiptFiles && gasto.receiptFiles.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {gasto.receiptFiles.map((file, index) => (
+                                  <div key={index} className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded text-xs">
+                                    <FileText className="w-3 h-3" />
+                                    <a 
+                                      href={file.fileUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline max-w-[100px] truncate"
+                                    >
+                                      {file.fileName}
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="text-right ml-4">
+                            <div className="font-semibold text-lg">{fmtMoney(Number(gasto.monto))}</div>
+                            <div className="text-xs text-zinc-500 mb-2">
+                              {new Date(gasto.createdAt).toLocaleDateString('es-CO')}
+                            </div>
+                            <div className="flex gap-2 justify-end text-sm">
+                              <button 
+                                className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded transition-colors" 
+                                onClick={() => startEditGasto(gasto)}
+                              >
+                                Editar
+                              </button>
+                              <button 
+                                className="px-2 py-1 text-red-600 hover:bg-red-50 rounded transition-colors" 
+                                onClick={() => deleteGasto(gasto.id)}
+                              >
+                                Eliminar
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -587,13 +757,13 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
   return (
     <div className="bg-white border rounded-lg shadow-sm">
       <div className="border-b">
-        <nav className="flex">
+        <nav className="flex overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               data-testid={`tab-${tab.label}`}
-              className={`px-4 py-2 border-b-2 transition-colors ${
+              className={`px-3 py-2 sm:px-4 sm:py-3 border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-zinc-600 hover:text-zinc-900'
@@ -604,7 +774,7 @@ export default function DetailTabs({ eventId, totalNegociado, artistas }: Props)
           ))}
         </nav>
       </div>
-      <div className="p-4">
+      <div className="p-3 sm:p-4 lg:p-6">
         {renderContent()}
       </div>
     </div>

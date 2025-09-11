@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface EventoDetalle {
@@ -105,7 +105,6 @@ const UsersIcon = () => (
 
 export default function UtilidadDetallePage() {
   const params = useParams();
-  const router = useRouter();
   const [data, setData] = useState<EventoDetalle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

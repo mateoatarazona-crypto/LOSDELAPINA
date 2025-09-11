@@ -55,7 +55,7 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
   useEffect(() => {
     const savedEvents = localStorage.getItem('calendar_events')
     if (savedEvents) {
-      const parsedEvents = JSON.parse(savedEvents).map((event: any) => ({
+      const parsedEvents = JSON.parse(savedEvents).map((event: Omit<CalendarEvent, 'createdAt'> & { createdAt: string }) => ({
         ...event,
         createdAt: new Date(event.createdAt)
       }))
@@ -219,7 +219,7 @@ export default function Calendar({ onEventAdd, onEventUpdate, onEventDelete, cla
           {dayEvents.length > 0 && (
             <div className="absolute bottom-1 left-1 right-1">
               <div className="flex gap-1 flex-wrap">
-                {dayEvents.slice(0, 2).map((event, index) => (
+                {dayEvents.slice(0, 2).map((event) => (
                   <div
                     key={event.id}
                     className={`w-2 h-2 rounded-full ${

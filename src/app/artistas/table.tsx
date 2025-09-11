@@ -1,5 +1,8 @@
 'use client'
 import { useMemo, useState } from 'react'
+import { FileUpload, useFileUpload } from '@/components/ui/file-upload'
+import { Button } from '@/components/ui/button'
+import { Image } from 'lucide-react'
 import type { ArtistaRow } from './page'
 
 export default function ArtistasTable({ initialData }: { initialData: ArtistaRow[] }) {
@@ -10,6 +13,8 @@ export default function ArtistasTable({ initialData }: { initialData: ArtistaRow
   const [editingId, setEditingId] = useState<number | null>(null)
   const [form, setForm] = useState({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
   const [editForm, setEditForm] = useState({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
+  const { files: photoFiles, handleFilesChange: handlePhotoChange, clearFiles: clearPhotoFiles } = useFileUpload()
+  const { files: contractFiles, handleFilesChange: handleContractChange, clearFiles: clearContractFiles } = useFileUpload()
 
   const filtered = useMemo(() => data.filter(d => d.nombre.toLowerCase().includes(q.toLowerCase())), [data, q])
 
@@ -23,6 +28,8 @@ export default function ArtistasTable({ initialData }: { initialData: ArtistaRow
       representante: a.representante ?? null,
       contacto: a.contacto ?? null,
       notas: a.notas ?? null,
+      fotoUrl: a.fotoUrl ?? null,
+      contratoUrl: a.contratoUrl ?? null,
       fechasCount: a._count?.fechas ?? 0,
     })))
   }
@@ -34,6 +41,8 @@ export default function ArtistasTable({ initialData }: { initialData: ArtistaRow
       const res = await fetch('/api/artistas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
       if (!res.ok) throw new Error('create failed')
       setForm({ nombre: '', genero: '', representante: '', contacto: '', notas: '' })
+      clearPhotoFiles()
+      clearContractFiles()
       setShowAdd(false)
       await refresh()
     } catch (e) {
@@ -98,64 +107,117 @@ export default function ArtistasTable({ initialData }: { initialData: ArtistaRow
             <input placeholder="Contacto" className="border rounded px-2 py-1.5 text-sm" value={form.contacto} onChange={e => setForm({ ...form, contacto: e.target.value })} />
             <input placeholder="Notas" className="border rounded px-2 py-1.5 text-sm" value={form.notas} onChange={e => setForm({ ...form, notas: e.target.value })} />
           </div>
-          <div className="mt-3">
-            <button disabled={saving} onClick={create} className="px-3 py-2 text-sm rounded bg-cyan-600 text-white disabled:opacity-50">Guardar</button>
+          
+          <div className="mt-4 space-y-4">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-2">
+                <Image className="w-4 h-4" />
+                Foto del Artista
+              </label>
+              <FileUpload
+                onFilesChange={handlePhotoChange}
+                acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                maxFiles={1}
+                maxSize={5}
+                className="border-2 border-dashed border-zinc-300 rounded-lg p-4"
+              />
+            </div>
+            
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-2">
+                <Image className="w-4 h-4" />
+                Contrato/Documentos
+              </label>
+              <FileUpload
+                onFilesChange={handleContractChange}
+                acceptedTypes={['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}
+                maxFiles={3}
+                maxSize={10}
+                className="border-2 border-dashed border-zinc-300 rounded-lg p-4"
+              />
+            </div>
+          </div>
+          
+          <div className="mt-4">
+            <Button disabled={saving} onClick={create} className="bg-cyan-600 hover:bg-cyan-700">
+              {saving ? 'Guardando...' : 'Guardar Artista'}
+            </Button>
           </div>
         </div>
       )}
 
       <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
-        <table className="min-w-full text-sm">
+        <table className="min-w-full text-xs sm:text-sm">
           <thead>
             <tr className="text-left border-b bg-zinc-50/60">
-              <th className="py-3 pr-4 font-medium text-zinc-600">Nombre</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600">Género</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600">Representante</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600">Contacto</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600">Notas</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600 text-right">Fechas</th>
-              <th className="py-3 pr-4 font-medium text-zinc-600">Acciones</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600">Nombre</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600 hidden sm:table-cell">Género</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600 hidden md:table-cell">Representante</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600 hidden lg:table-cell">Contacto</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600 hidden xl:table-cell">Notas</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600 text-right">Fechas</th>
+              <th className="py-2 sm:py-3 pr-2 sm:pr-4 font-medium text-zinc-600">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map(a => (
-              <tr key={a.id} className="border-b">
-                <td className="py-3 pr-4">
+              <tr key={a.id} className="border-b hover:bg-zinc-50/50">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4">
                   {editingId === a.id ? (
-                    <input className="border rounded px-2 py-1 text-sm" value={editForm.nombre} onChange={e => setEditForm({ ...editForm, nombre: e.target.value })} />
-                  ) : a.nombre}
+                    <input className="border rounded px-2 py-1 text-sm w-full" value={editForm.nombre} onChange={e => setEditForm({ ...editForm, nombre: e.target.value })} />
+                  ) : (
+                     <div className="flex items-center gap-2 sm:gap-3">
+                       <div className="min-w-0">
+                         <span className="font-medium text-xs sm:text-sm truncate block">{a.nombre}</span>
+                         <div className="sm:hidden text-xs text-zinc-500 space-y-1">
+                           {a.genero && <div>Género: {a.genero}</div>}
+                           {a.representante && <div className="truncate">Rep: {a.representante}</div>}
+                         </div>
+                       </div>
+                     </div>
+                   )}
                 </td>
-                <td className="py-3 pr-4">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4 hidden sm:table-cell">
                   {editingId === a.id ? (
-                    <input className="border rounded px-2 py-1 text-sm" value={editForm.genero} onChange={e => setEditForm({ ...editForm, genero: e.target.value })} />
-                  ) : (a.genero || '')}
+                    <input className="border rounded px-2 py-1 text-sm w-full" value={editForm.genero} onChange={e => setEditForm({ ...editForm, genero: e.target.value })} />
+                  ) : (a.genero || '-')}
                 </td>
-                <td className="py-3 pr-4">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4 hidden md:table-cell">
                   {editingId === a.id ? (
-                    <input className="border rounded px-2 py-1 text-sm" value={editForm.representante} onChange={e => setEditForm({ ...editForm, representante: e.target.value })} />
-                  ) : (a.representante || '')}
+                    <input className="border rounded px-2 py-1 text-sm w-full" value={editForm.representante} onChange={e => setEditForm({ ...editForm, representante: e.target.value })} />
+                  ) : (
+                    <span className="truncate max-w-32 block text-zinc-600">{a.representante || '-'}</span>
+                  )}
                 </td>
-                <td className="py-3 pr-4">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4 hidden lg:table-cell">
                   {editingId === a.id ? (
-                    <input className="border rounded px-2 py-1 text-sm" value={editForm.contacto} onChange={e => setEditForm({ ...editForm, contacto: e.target.value })} />
-                  ) : (a.contacto || '')}
+                    <input className="border rounded px-2 py-1 text-sm w-full" value={editForm.contacto} onChange={e => setEditForm({ ...editForm, contacto: e.target.value })} />
+                  ) : (
+                    <span className="truncate max-w-32 block text-zinc-600">{a.contacto || '-'}</span>
+                  )}
                 </td>
-                <td className="py-3 pr-4">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4 hidden xl:table-cell">
                   {editingId === a.id ? (
-                    <input className="border rounded px-2 py-1 text-sm" value={editForm.notas} onChange={e => setEditForm({ ...editForm, notas: e.target.value })} />
-                  ) : (a.notas || '')}
+                    <input className="border rounded px-2 py-1 text-sm w-full" value={editForm.notas} onChange={e => setEditForm({ ...editForm, notas: e.target.value })} />
+                  ) : (
+                    <span className="truncate max-w-32 block text-zinc-600">{a.notas || '-'}</span>
+                  )}
                 </td>
-                <td className="py-3 pr-4 text-right">{a.fechasCount}</td>
-                <td className="py-3 pr-4">
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4 text-right">
+                  <span className="inline-flex items-center px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                    {a.fechasCount}
+                  </span>
+                </td>
+                <td className="py-2 sm:py-3 pr-2 sm:pr-4">
                   {editingId === a.id ? (
-                    <div className="flex gap-2">
-                      <button disabled={saving} onClick={() => saveEdit(a.id)} className="underline">Guardar</button>
-                      <button onClick={() => setEditingId(null)} className="underline">Cancelar</button>
+                    <div className="flex gap-1 sm:gap-2">
+                      <button disabled={saving} onClick={() => saveEdit(a.id)} className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm px-1 sm:px-2 py-1 rounded">Guardar</button>
+                      <button onClick={() => setEditingId(null)} className="text-gray-600 hover:text-gray-800 text-xs sm:text-sm px-1 sm:px-2 py-1 rounded">Cancelar</button>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
-                      <button onClick={() => startEdit(a)} className="underline">Editar</button>
-                      <button onClick={() => remove(a.id)} className="underline text-red-600">Eliminar</button>
+                    <div className="flex gap-1 sm:gap-2">
+                      <button onClick={() => startEdit(a)} className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm px-1 sm:px-2 py-1 rounded">Editar</button>
+                      <button onClick={() => remove(a.id)} className="text-red-600 hover:text-red-800 text-xs sm:text-sm px-1 sm:px-2 py-1 rounded">Eliminar</button>
                     </div>
                   )}
                 </td>

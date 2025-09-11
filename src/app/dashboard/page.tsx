@@ -80,24 +80,24 @@ export default function Dashboard() {
   }
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         {/* Header con información del usuario */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="font-display text-3xl" style={{ color: 'var(--foreground)' }}>Dashboard</h1>
-            <p className="font-caption mt-1">Bienvenido, {session.user?.name || session.user?.email}</p>
+            <h1 className="font-display text-2xl sm:text-3xl" style={{ color: 'var(--foreground)' }}>Dashboard</h1>
+            <p className="font-caption mt-1 text-sm sm:text-base">Bienvenido, {session.user?.name || session.user?.email}</p>
           </div>
           <button
             onClick={handleSignOut}
-            className="btn-secondary flex items-center gap-2"
+            className="btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto text-sm sm:text-base"
           >
             <LogOut className="h-4 w-4" />
-            Cerrar Sesión
+            <span className="sm:inline">Cerrar Sesión</span>
           </button>
         </div>
-        <div className="space-y-8 animate-fade-in-up">
+        <div className="space-y-6 sm:space-y-8 animate-fade-in-up">
       {/* KPIs Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <div className="card hover:scale-[1.02] transition-transform duration-200">
           <Kpi title="Fechas este mes" value={kpis.eventosDelMes} icon="📅" />
         </div>
@@ -131,9 +131,9 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="card p-8">
-        <h2 className="font-display text-2xl mb-6 text-center" style={{ color: 'var(--foreground)' }}>Acciones Rápidas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="card p-4 sm:p-6 lg:p-8">
+        <h2 className="font-display text-xl sm:text-2xl mb-4 sm:mb-6 text-center" style={{ color: 'var(--foreground)' }}>Acciones Rápidas</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           <QuickActionCard
             href="/fechas"
             title="Gestionar Fechas"
@@ -197,16 +197,16 @@ function Kpi({
   };
 
   return (
-    <div className="card p-6 cursor-pointer">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-caption uppercase tracking-wide">{title}</h3>
+    <div className="card p-4 sm:p-6 cursor-pointer">
+      <div className="flex items-center justify-between mb-2 sm:mb-3">
+        <h3 className="font-caption uppercase tracking-wide text-xs sm:text-sm">{title}</h3>
         {icon && (
-          <span className="text-2xl text-accent">
+          <span className="text-xl sm:text-2xl text-accent">
             {icon}
           </span>
         )}
       </div>
-      <p className="font-display text-3xl mb-3" style={{ color: 'var(--foreground)' }}>
+      <p className="font-display text-2xl sm:text-3xl mb-2 sm:mb-3" style={{ color: 'var(--foreground)' }}>
         {formatValue(value)}
       </p>
       <div className="h-1 rounded-full" style={{ background: 'var(--gradient-primary)' }}></div>
@@ -229,20 +229,20 @@ function QuickActionCard({
 }) {
   return (
     <Link href={href} className="group">
-      <div className="card p-6 group-hover:scale-[1.02] transition-all duration-200">
-        <div className="mb-4">
-          <div className="text-3xl text-accent">
+      <div className="card p-4 sm:p-6 group-hover:scale-[1.02] transition-all duration-200 h-full">
+        <div className="mb-3 sm:mb-4">
+          <div className="text-2xl sm:text-3xl text-accent">
             {icon}
           </div>
         </div>
-        <h3 className="font-heading text-lg mb-2">
+        <h3 className="font-heading text-base sm:text-lg mb-2">
           {title}
         </h3>
-        <p className="font-body text-sm mb-4">
+        <p className="font-body text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
           {description}
         </p>
-        <div className="flex items-center justify-between">
-          <span className="font-caption text-accent font-medium group-hover:translate-x-1 transition-transform duration-200">
+        <div className="flex items-center justify-between mt-auto">
+          <span className="font-caption text-accent font-medium group-hover:translate-x-1 transition-transform duration-200 text-xs sm:text-sm">
             Ir →
           </span>
         </div>

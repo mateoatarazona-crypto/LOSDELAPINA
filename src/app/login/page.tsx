@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -10,7 +10,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +28,7 @@ export default function LoginPage() {
         setError('Credenciales inválidas');
       }
       // NextAuth manejará la redirección automáticamente
-    } catch (error) {
+    } catch {
       setError('Error al iniciar sesión');
     } finally {
       setIsLoading(false);

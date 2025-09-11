@@ -154,56 +154,56 @@ export default function UtilidadesPage() {
   const { eventos, estadisticas } = data;
 
   return (
-    <div className="space-y-6 p-4 md:p-8" style={{ background: 'var(--background)' }}>
-      <div className="card p-8 text-center">
-        <h1 className="font-display text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+    <div className="space-y-4 sm:space-y-6 p-2 sm:p-4 lg:p-8" style={{ background: 'var(--background)' }}>
+      <div className="card p-4 sm:p-6 lg:p-8 text-center">
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4" style={{ color: 'var(--foreground)' }}>
           💰 Utilidades por Fecha
         </h1>
-        <p className="font-caption text-lg" style={{ color: 'var(--foreground-secondary)' }}>
+        <p className="font-caption text-sm sm:text-base lg:text-lg" style={{ color: 'var(--foreground-secondary)' }}>
           {eventos.length} eventos registrados
         </p>
       </div>
 
       {/* Estadísticas Generales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="card p-4 sm:p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Ingresos Totales</h3>
+            <h3 className="font-caption text-xs sm:text-sm uppercase tracking-wider truncate" style={{ color: 'var(--foreground-secondary)' }}>Ingresos Totales</h3>
             <DollarSignIcon />
           </div>
-          <div className="font-display text-2xl font-bold" style={{ color: 'var(--accent)' }}>{formatCurrency(estadisticas.ingresosTotales)}</div>
+          <div className="font-display text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: 'var(--accent)' }}>{formatCurrency(estadisticas.ingresosTotales)}</div>
         </div>
 
-        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
+        <div className="card p-4 sm:p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Utilidad Total</h3>
+            <h3 className="font-caption text-xs sm:text-sm uppercase tracking-wider truncate" style={{ color: 'var(--foreground-secondary)' }}>Utilidad Total</h3>
             <TrendingUpIcon />
           </div>
-          <div className={`font-display text-2xl font-bold ${
+          <div className={`font-display text-lg sm:text-xl lg:text-2xl font-bold ${
             estadisticas.utilidadTotal >= 0 ? '' : ''
           }`} style={{ color: 'var(--accent)' }}>
             {formatCurrency(estadisticas.utilidadTotal)}
           </div>
         </div>
 
-        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
+        <div className="card p-4 sm:p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Margen Promedio</h3>
+            <h3 className="font-caption text-xs sm:text-sm uppercase tracking-wider truncate" style={{ color: 'var(--foreground-secondary)' }}>Margen Promedio</h3>
             <TrendingUpIcon />
           </div>
-          <div className={`font-display text-2xl font-bold ${
+          <div className={`font-display text-lg sm:text-xl lg:text-2xl font-bold ${
             estadisticas.margenPromedioUtilidad >= 0 ? '' : ''
           }`} style={{ color: 'var(--accent)' }}>
             {estadisticas.margenPromedioUtilidad.toFixed(1)}%
           </div>
         </div>
 
-        <div className="card p-6 hover:scale-[1.02] transition-all duration-200">
+        <div className="card p-4 sm:p-6 hover:scale-[1.02] transition-all duration-200">
           <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="font-caption text-sm uppercase tracking-wider" style={{ color: 'var(--foreground-secondary)' }}>Eventos Rentables</h3>
+            <h3 className="font-caption text-xs sm:text-sm uppercase tracking-wider truncate" style={{ color: 'var(--foreground-secondary)' }}>Eventos Rentables</h3>
             <CalendarIcon />
           </div>
-          <div className="font-display text-2xl font-bold" style={{ color: 'var(--accent)' }}>
+          <div className="font-display text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: 'var(--accent)' }}>
             {estadisticas.eventosRentables}/{estadisticas.totalEventos}
           </div>
           <p className="text-xs" style={{ color: 'var(--foreground-secondary)' }}>

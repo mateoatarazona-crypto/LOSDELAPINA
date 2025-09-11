@@ -8,16 +8,7 @@ type Props = {
   estado: string
 }
 
-const ESTADOS = [
-  "Propuesta",
-  "Negociacion",
-  "Contratada",
-  "PendienteAnticipo",
-  "Confirmada",
-  "Ejecutada",
-  "Cerrada",
-  "Cancelada",
-]
+
 
 function getEstadoColor(estado: string) {
   const colors: Record<string, string> = {
@@ -68,7 +59,7 @@ export default function EstadoInline({ id, estado }: Props) {
       }
 
       // Validar transición en cliente para mejor UX (servidor también valida)
-      const allowed = (ALLOWED_TRANSITIONS as any)[estado] || []
+      const allowed = ALLOWED_TRANSITIONS[estado] || []
       if (!allowed.includes(selected)) {
         alert(`Transición inválida: ${estado} → ${selected}`)
         return
@@ -81,14 +72,15 @@ export default function EstadoInline({ id, estado }: Props) {
         body: JSON.stringify({ estado: selected }),
       })
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'No se pudo actualizar el estado' }))
+        const err = await res.json().catch(() => ({ error: 'No se pudo actualizar el estado' })) as { error?: string }
         throw new Error(err.error || 'No se pudo actualizar el estado')
       }
       setEditing(false)
       router.refresh()
-    } catch (e: any) {
-      setError(e?.message || 'Error guardando el estado')
-      alert(e?.message || 'Error guardando el estado')
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Error guardando el estado'
+      setError(message)
+      alert(message)
     } finally {
       setSaving(false)
     }
@@ -114,7 +106,7 @@ export default function EstadoInline({ id, estado }: Props) {
         className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/30"
       >
         {/* Mostrar sólo transiciones válidas desde el estado actual */}
-        {((ALLOWED_TRANSITIONS as any)[estado] || []).concat([]).map((e: string) => (
+        {(ALLOWED_TRANSITIONS[estado] || []).concat([]).map((e: string) => (
           <option key={e} value={e}>{e}</option>
         ))}
       </select>

@@ -17,7 +17,14 @@ export async function GET(request: NextRequest) {
       prisma.event.count({
         where: { fechaEvento: { gte: startMonth, lt: endMonth } },
       }),
-      prisma.event.findMany({ include: { gastos: true, artistas: true, empresario: true } }),
+      prisma.event.findMany({ 
+        include: { gastos: true, artistas: true, empresario: true },
+        where: {
+          fechaEvento: {
+            gte: new Date(new Date().getFullYear() - 1, 0, 1), // Solo eventos del último año
+          }
+        }
+      }),
     ]);
 
     const eventos = eventosRaw as EventWithRelations[];

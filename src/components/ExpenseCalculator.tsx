@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, DollarSign, TrendingUp, AlertTriangle, Calculator } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { AlertTriangle, Calculator } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateEventBalance, type EventFinancials, type FinancialBalance } from '@/lib/financial-calculator';
 
@@ -56,8 +56,34 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
     monto: ''
   });
 
+  const loadExpenses = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/expenses?fechaId=${eventId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setExpenses(data.expenses);
+      }
+    } catch (error) {
+      console.error('Error cargando gastos:', error);
+    }
+  }, [eventId]);
+
+  const loadBalance = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/events/${eventId}/balance`);
+      if (response.ok) {
+        const data = await response.json();
+        setBalance(data.balance);
+      }
+    } catch (error) {
+      console.error('Error cargando balance:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [eventId]);
+
   // Función para calcular balance financiero usando el algoritmo
-  const calculateFinancialBalance = async () => {
+  const calculateFinancialBalance = useCallback(async () => {
     if (!balance) return;
 
     try {
@@ -88,7 +114,7 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
     } catch (error) {
       console.error('Error calculando balance financiero:', error);
     }
-  };
+  }, [balance, eventId, expenses]);
 
   // Cargar gastos y balance
   useEffect(() => {
@@ -96,40 +122,14 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
       loadExpenses();
       loadBalance();
     }
-  }, [session, eventId]);
+  }, [session, eventId, loadExpenses, loadBalance]);
 
   // Recalcular balance financiero cuando cambien los gastos
   useEffect(() => {
     if (expenses.length > 0 && balance) {
       calculateFinancialBalance();
     }
-  }, [expenses, balance]);
-
-  const loadExpenses = async () => {
-    try {
-      const response = await fetch(`/api/expenses?fechaId=${eventId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setExpenses(data.expenses);
-      }
-    } catch (error) {
-      console.error('Error cargando gastos:', error);
-    }
-  };
-
-  const loadBalance = async () => {
-    try {
-      const response = await fetch(`/api/events/${eventId}/balance`);
-      if (response.ok) {
-        const data = await response.json();
-        setBalance(data.balance);
-      }
-    } catch (error) {
-      console.error('Error cargando balance:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [expenses, balance, calculateFinancialBalance]);
 
   const handleAddExpense = async () => {
     if (!newExpense.descripcion.trim() || !newExpense.monto) {
@@ -334,33 +334,148 @@ export default function ExpenseCalculator({ eventId, className = '' }: ExpenseCa
             </div>
           )}
 
-          {/* Gastos por categoría */}
+          {/* Visualización de Gastos por Categorías */}
           {Object.keys(financialBalance.gastosPorCategoria).length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Distribución de Gastos</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {Object.entries(financialBalance.gastosPorCategoria).map(([categoria, monto]) => {
-                  const porcentaje = financialBalance.totalGastos > 0 
-                    ? (monto / financialBalance.totalGastos) * 100 
-                    : 0;
-                  return (
-                    <div key={categoria} className="p-3 bg-gray-50 rounded-lg">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700">{categoria}</span>
-                        <span className="text-sm text-gray-600">{porcentaje.toFixed(1)}%</span>
-                      </div>
-                      <div className="text-lg font-bold text-gray-800">
-                        ${monto.toLocaleString()}
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
-                          style={{ width: `${porcentaje}%` }}
-                        ></div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <span className="text-xl">📊</span>
+                Visualización de Gastos por Categorías
+              </h3>
+              
+              {/* Gráfico Circular */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div className="bg-white p-4 rounded-lg border">
+                  <h4 className="text-md font-medium text-gray-700 mb-4 text-center">Distribución Porcentual</h4>
+                  <div className="flex justify-center mb-4">
+                    <div className="relative w-48 h-48">
+                      {/* Gráfico circular usando CSS */}
+                      <div className="w-full h-full rounded-full relative overflow-hidden" style={{
+                        background: `conic-gradient(${
+                          Object.entries(financialBalance.gastosPorCategoria)
+                            .map(([categoria, monto], index) => {
+                              const porcentaje = financialBalance.totalGastos > 0 ? (monto / financialBalance.totalGastos) * 100 : 0;
+                              const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#10B981', '#F97316', '#EC4899', '#6B7280'];
+                              const color = colors[index % colors.length];
+                              const prevPercentages = Object.entries(financialBalance.gastosPorCategoria)
+                                .slice(0, index)
+                                .reduce((sum, [, prevMonto]) => sum + (financialBalance.totalGastos > 0 ? (prevMonto / financialBalance.totalGastos) * 100 : 0), 0);
+                              return `${color} ${prevPercentages}% ${prevPercentages + porcentaje}%`;
+                            })
+                            .join(', ')
+                        }`
+                      }}>
+                        <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-lg font-bold text-gray-800">
+                              ${financialBalance.totalGastos.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-gray-600">Total</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                  
+                  {/* Leyenda */}
+                  <div className="grid grid-cols-1 gap-2">
+                    {Object.entries(financialBalance.gastosPorCategoria).map(([categoria, monto], index) => {
+                      const porcentaje = financialBalance.totalGastos > 0 ? (monto / financialBalance.totalGastos) * 100 : 0;
+                      const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#10B981', '#F97316', '#EC4899', '#6B7280'];
+                      const color = colors[index % colors.length];
+                      const categoryInfo = EXPENSE_CATEGORIES[categoria as keyof typeof EXPENSE_CATEGORIES] || EXPENSE_CATEGORIES.Otros;
+                      
+                      return (
+                        <div key={categoria} className="flex items-center gap-2 text-sm">
+                          <div 
+                            className="w-3 h-3 rounded-full" 
+                            style={{ backgroundColor: color }}
+                          ></div>
+                          <span className="text-xs">{categoryInfo.icon}</span>
+                          <span className="flex-1 text-gray-700">{categoryInfo.label}</span>
+                          <span className="font-medium text-gray-800">{porcentaje.toFixed(1)}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                {/* Gráfico de Barras */}
+                <div className="bg-white p-4 rounded-lg border">
+                  <h4 className="text-md font-medium text-gray-700 mb-4 text-center">Comparación por Monto</h4>
+                  <div className="space-y-3">
+                    {Object.entries(financialBalance.gastosPorCategoria)
+                      .sort(([,a], [,b]) => b - a)
+                      .map(([categoria, monto], index) => {
+                        const porcentaje = financialBalance.totalGastos > 0 ? (monto / financialBalance.totalGastos) * 100 : 0;
+                        const maxMonto = Math.max(...Object.values(financialBalance.gastosPorCategoria));
+                        const barWidth = maxMonto > 0 ? (monto / maxMonto) * 100 : 0;
+                        const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444', '#10B981', '#F97316', '#EC4899', '#6B7280'];
+                        const color = colors[index % colors.length];
+                        const categoryInfo = EXPENSE_CATEGORIES[categoria as keyof typeof EXPENSE_CATEGORIES] || EXPENSE_CATEGORIES.Otros;
+                        
+                        return (
+                          <div key={categoria} className="space-y-1">
+                            <div className="flex justify-between items-center text-sm">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">{categoryInfo.icon}</span>
+                                <span className="text-gray-700 font-medium">{categoryInfo.label}</span>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-bold text-gray-800">${monto.toLocaleString()}</div>
+                                <div className="text-xs text-gray-600">{porcentaje.toFixed(1)}%</div>
+                              </div>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-3">
+                              <div 
+                                className="h-3 rounded-full transition-all duration-500 ease-out" 
+                                style={{ 
+                                  width: `${barWidth}%`,
+                                  backgroundColor: color
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              {/* Tarjetas de Resumen por Categoría */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {Object.entries(financialBalance.gastosPorCategoria)
+                  .sort(([,a], [,b]) => b - a)
+                  .map(([categoria, monto], index) => {
+                    const porcentaje = financialBalance.totalGastos > 0 ? (monto / financialBalance.totalGastos) * 100 : 0;
+                    const colors = ['bg-blue-50 border-blue-200', 'bg-purple-50 border-purple-200', 'bg-yellow-50 border-yellow-200', 'bg-red-50 border-red-200', 'bg-green-50 border-green-200', 'bg-orange-50 border-orange-200', 'bg-pink-50 border-pink-200', 'bg-gray-50 border-gray-200'];
+                    const textColors = ['text-blue-700', 'text-purple-700', 'text-yellow-700', 'text-red-700', 'text-green-700', 'text-orange-700', 'text-pink-700', 'text-gray-700'];
+                    const bgColor = colors[index % colors.length];
+                    const textColor = textColors[index % textColors.length];
+                    const categoryInfo = EXPENSE_CATEGORIES[categoria as keyof typeof EXPENSE_CATEGORIES] || EXPENSE_CATEGORIES.Otros;
+                    
+                    return (
+                      <div key={categoria} className={`p-4 rounded-lg border ${bgColor} hover:shadow-md transition-shadow`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{categoryInfo.icon}</span>
+                            <span className="text-sm font-medium text-gray-700">{categoryInfo.label}</span>
+                          </div>
+                          <span className="text-sm font-medium text-gray-600">{porcentaje.toFixed(1)}%</span>
+                        </div>
+                        <div className={`text-xl font-bold ${textColor} mb-2`}>
+                          ${monto.toLocaleString()}
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${textColor.replace('text-', 'bg-').replace('-700', '-600')}`}
+                            style={{ width: `${porcentaje}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })
+                }
               </div>
             </div>
           )}

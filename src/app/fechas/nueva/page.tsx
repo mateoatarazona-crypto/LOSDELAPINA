@@ -77,7 +77,7 @@ export default function NuevaFechaPage() {
     loadData()
   }, [])
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
+  const handleInputChange = (field: keyof FormData, value: string | number | Date) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -141,7 +141,7 @@ export default function NuevaFechaPage() {
         const errorData = await response.json()
         error('Error', errorData.message || 'Error al crear la fecha')
       }
-    } catch (err) {
+    } catch {
       error('Error', 'Error de conexión')
     } finally {
       setLoading(false)
@@ -275,7 +275,7 @@ export default function NuevaFechaPage() {
               <label className="block text-purple-300 text-sm font-medium mb-2">Seleccionar Empresario</label>
               <select
                 value={formData.empresarioId || ''}
-                onChange={(e) => handleInputChange('empresarioId', e.target.value ? parseInt(e.target.value) : null)}
+                onChange={(e) => handleInputChange('empresarioId', e.target.value ? parseInt(e.target.value) : 0)}
                 className="w-full bg-black/50 border border-purple-400/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-colors"
               >
                 <option value="">Seleccionar empresario...</option>
@@ -305,7 +305,7 @@ export default function NuevaFechaPage() {
             </div>
             
             {formData.artistas.length === 0 ? (
-              <p className="text-gray-400 text-center py-8">No hay artistas agregados. Haz clic en "Agregar Artista" para comenzar.</p>
+              <p className="text-gray-400 text-center py-8">No hay artistas agregados. Haz clic en &quot;Agregar Artista&quot; para comenzar.</p>
             ) : (
               <div className="space-y-4">
                 {formData.artistas.map((artista, index) => (

@@ -1,18 +1,16 @@
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
+// Función para crear una nueva instancia de Prisma cada vez
+function createPrismaClient() {
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
+  })
+}
 
 // Crear una nueva instancia cada vez para evitar prepared statements
-export const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL
-    }
-  }
-})
+export const prisma = createPrismaClient()
 
-// Desconectar al finalizar para limpiar prepared statements
+// Desconectar al finalizar
 process.on('beforeExit', async () => {
   await prisma.$disconnect()
 })

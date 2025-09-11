@@ -5,6 +5,7 @@ import { es } from 'date-fns/locale'
 import Link from 'next/link'
 import EstadoInline from './EstadoInline'
 import DetailTabs from './DetailTabs'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,7 +49,7 @@ async function getEventDetail(id: string): Promise<EventDetail | null> {
     total: Number(evento.totalNegociado),
     anticipo: Number(evento.anticipo),
     segundoPago: Number(evento.segundoPago),
-    artistas: evento.artistas.map((ea: { artista: { nombre: string }; porcentaje: any }) => ({
+    artistas: evento.artistas.map((ea: { artista: { nombre: string }; porcentaje: Decimal }) => ({
       nombre: ea.artista.nombre,
       porcentaje: Number(ea.porcentaje),
     })),

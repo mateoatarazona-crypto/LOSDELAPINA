@@ -19,7 +19,7 @@ interface FilterGroup {
 
 interface FilterPanelProps {
   filterGroups: FilterGroup[]
-  onFiltersChange: (filters: Record<string, any>) => void
+  onFiltersChange: (filters: Record<string, string | string[] | number>) => void
   className?: string
 }
 
@@ -28,20 +28,21 @@ export default function FilterPanel({
   onFiltersChange, 
   className = "" 
 }: FilterPanelProps) {
-  const [filters, setFilters] = useState<Record<string, any>>({})
+  const [filters, setFilters] = useState<Record<string, string | string[] | number>>({})
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const handleFilterChange = (groupKey: string, value: any, type: string) => {
-    let newFilters = { ...filters }
+  const handleFilterChange = (groupKey: string, value: string | number, type: string) => {
+    const newFilters = { ...filters }
     
     if (type === 'checkbox') {
       if (!newFilters[groupKey]) newFilters[groupKey] = []
       const currentValues = newFilters[groupKey] as string[]
+      const stringValue = String(value)
       
-      if (currentValues.includes(value)) {
-        newFilters[groupKey] = currentValues.filter(v => v !== value)
+      if (currentValues.includes(stringValue)) {
+        newFilters[groupKey] = currentValues.filter(v => v !== stringValue)
       } else {
-        newFilters[groupKey] = [...currentValues, value]
+        newFilters[groupKey] = [...currentValues, stringValue]
       }
       
       if (newFilters[groupKey].length === 0) {
@@ -146,7 +147,7 @@ export default function FilterPanel({
               <div className="space-y-1 max-h-32 overflow-y-auto custom-scrollbar">
                 {group.options.map((option) => {
                   const isSelected = group.type === 'checkbox' 
-                    ? (filters[group.key] || []).includes(option.value)
+                    ? Array.isArray(filters[group.key]) && (filters[group.key] as string[]).includes(option.value)
                     : filters[group.key] === option.value
                   
                   return (
@@ -200,11 +201,11 @@ export default function FilterPanel({
 }
 
 // Hook para manejar filtros
-export function useFilters<T>(data: T[], filterConfig: Record<string, (item: T, value: any) => boolean>) {
+export function useFilters<T>(data: T[], filterConfig: Record<string, (item: T, value: string | string[] | number) => boolean>) {
   const [filteredData, setFilteredData] = useState(data)
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({})
+  const [activeFilters, setActiveFilters] = useState<Record<string, string | string[] | number>>({})
 
-  const applyFilters = (filters: Record<string, any>) => {
+  const applyFilters = (filters: Record<string, string | string[] | number>) => {
     setActiveFilters(filters)
     
     if (Object.keys(filters).length === 0) {

@@ -52,7 +52,7 @@ export default function RegisterPage() {
         const data = await response.json();
         setError(data.error || 'Error al crear la cuenta');
       }
-    } catch (error) {
+    } catch {
       setError('Error al crear la cuenta');
     } finally {
       setIsLoading(false);

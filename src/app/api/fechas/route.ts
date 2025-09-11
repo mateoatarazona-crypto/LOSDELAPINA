@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth-config'
+import type { Session } from 'next-auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession()
+    const session = await getServerSession(authOptions) as Session | null
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
@@ -69,7 +71,7 @@ export async function POST(request: NextRequest) {
         const artistasData = artistas
           .filter((a: any) => a.artistaId && a.artistaId > 0)
           .map((a: any) => ({
-            eventoId: evento.id,
+            fechaId: evento.id,
             artistaId: a.artistaId,
             porcentaje: a.porcentaje || 0
           }))
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession()
+    const session = await getServerSession(authOptions) as Session | null
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
@@ -123,6 +125,11 @@ export async function GET(request: NextRequest) {
       where.fechaEvento = {}
       if (desde) where.fechaEvento.gte = new Date(desde)
       if (hasta) where.fechaEvento.lte = new Date(hasta)
+    } else {
+      // Si no hay filtros de fecha, limitar a eventos de los últimos 6 meses
+      const sixMonthsAgo = new Date()
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+      where.fechaEvento = { gte: sixMonthsAgo }
     }
 
     const eventos = await prisma.event.findMany({
@@ -139,7 +146,8 @@ export async function GET(request: NextRequest) {
       },
       orderBy: {
         fechaEvento: 'asc'
-      }
+      },
+      take: 100 // Limitar a 100 eventos por consulta
     })
 
     return NextResponse.json(eventos)

@@ -1,4 +1,17 @@
 import { prisma } from '@/lib/prisma';
+import { Decimal } from '@prisma/client/runtime/library';
+
+interface Gasto {
+  categoria?: string;
+  monto?: number | Decimal;
+}
+
+interface EventWithGastos {
+  totalNegociado?: number | Decimal;
+  anticipo?: number | Decimal;
+  segundoPago?: number | Decimal;
+  gastos?: Gasto[];
+}
 
 interface BalanceCalculation {
   totalNegociado: number;
@@ -12,19 +25,19 @@ interface BalanceCalculation {
   estado: 'positivo' | 'negativo' | 'equilibrado';
 }
 
-export function calculateEventBalance(event: any): BalanceCalculation {
-  const totalNegociado = event.totalNegociado || 0;
-  const anticipo = event.anticipo || 0;
-  const segundoPago = event.segundoPago || 0;
+export function calculateEventBalance(event: EventWithGastos): BalanceCalculation {
+  const totalNegociado = Number(event.totalNegociado || 0);
+  const anticipo = Number(event.anticipo || 0);
+  const segundoPago = Number(event.segundoPago || 0);
   const totalIngresos = anticipo + segundoPago;
 
   // Calcular gastos totales y por categoría
   const gastosPorCategoria: Record<string, number> = {};
   let totalGastos = 0;
 
-  event.gastos?.forEach((gasto: any) => {
+  event.gastos?.forEach((gasto: Gasto) => {
     const categoria = gasto.categoria || 'Sin categoría';
-    const monto = gasto.monto || 0;
+    const monto = Number(gasto.monto || 0);
     
     gastosPorCategoria[categoria] = (gastosPorCategoria[categoria] || 0) + monto;
     totalGastos += monto;

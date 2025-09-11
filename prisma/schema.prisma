@@ -16,7 +16,9 @@ model Artist {
   representante String?
   contacto      String?
   notas         String?
+  // photoUrl      String?       // URL de la foto del artista - Temporalmente comentado
   fechas        EventArtist[]
+  documents     ArtistDocument[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -48,6 +50,11 @@ enum EstadoEvento {
 }
 
 enum CategoriaGasto {
+  Giras
+  Produccion
+  Merchandising
+  Promocion
+  EquipoTecnico
   Viajes
   Alojamiento
   TransporteLocal
@@ -77,8 +84,13 @@ model Event {
   gastos         Expense[]
   artistas       EventArtist[]
   pagos          Payment[]
+  documents      EventDocument[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+
+  @@index([fechaEvento])
+  @@index([estado])
+  @@index([fechaEvento, estado])
 }
 
 model EventArtist {
@@ -98,7 +110,8 @@ model Expense {
   categoria      CategoriaGasto
   descripcion    String?
   monto          Decimal
-  comprobanteUrl String?
+  comprobanteUrl String?        // URL del comprobante de pago
+  receiptFiles   ExpenseFile[]  // Múltiples archivos adjuntos
   fecha          Event          @relation(fields: [fechaId], references: [id])
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -136,4 +149,53 @@ model User {
   role         Role     @default(Lectura)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+enum DocumentType {
+  Contract
+  Receipt
+  Photo
+  Other
+}
+
+model ArtistDocument {
+  id          Int          @id @default(autoincrement())
+  artistId    Int
+  fileName    String
+  fileUrl     String
+  fileSize    Int?
+  mimeType    String?
+  documentType DocumentType @default(Other)
+  description String?
+  artist      Artist       @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model EventDocument {
+  id          Int          @id @default(autoincrement())
+  eventId     Int
+  fileName    String
+  fileUrl     String
+  fileSize    Int?
+  mimeType    String?
+  documentType DocumentType @default(Contract)
+  description String?
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model ExpenseFile {
+  id          Int          @id @default(autoincrement())
+  expenseId   Int
+  fileName    String
+  fileUrl     String
+  fileSize    Int?
+  mimeType    String?
+  documentType DocumentType @default(Receipt)
+  description String?
+  expense     Expense      @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }

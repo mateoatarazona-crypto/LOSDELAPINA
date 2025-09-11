@@ -1,6 +1,7 @@
 "use client"
 import React, { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import type { FechaRow } from './page'
 
 function fmtMoney(v: number) {
@@ -282,9 +283,9 @@ export default function FechasTable({ initialData, basePath = '/fechas' }: { ini
                       </div>
                     ) : (
                       <div className="flex gap-3">
-                        <a className="inline-flex items-center gap-1 underline" href={`/fechas/${r.id}`}>
+                        <Link className="inline-flex items-center gap-1 underline" href={`/fechas/${r.id}`}>
                           <EyeIcon /> Ver
-                        </a>
+                        </Link>
                         <button className="inline-flex items-center gap-1 underline" onClick={() => duplicate(r.id)} disabled={loadingId === r.id}>
                           {loadingId === r.id ? <SpinnerIcon /> : <CopyIcon />}
                           {loadingId === r.id ? 'Duplicando…' : 'Duplicar'}

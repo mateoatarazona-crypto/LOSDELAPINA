@@ -92,7 +92,7 @@ export default function SearchBar({
       {query && (
         <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-cyan-900/20 backdrop-blur-sm border border-cyan-700/20 rounded-lg">
           <div className="text-xs text-cyan-300/80 font-mono">
-            Buscando: <span className="text-white font-semibold">"{query}"</span>
+            Buscando: <span className="text-white font-semibold">&quot;{query}&quot;</span>
           </div>
         </div>
       )}

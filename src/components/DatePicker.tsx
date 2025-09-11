@@ -17,7 +17,7 @@ const MONTHS = [
 
 const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
-export default function DatePicker({ value, onChange, className = '', placeholder = 'Seleccionar fecha', required = false }: DatePickerProps) {
+export default function DatePicker({ value, onChange, className = '', placeholder = 'Seleccionar fecha' }: DatePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)

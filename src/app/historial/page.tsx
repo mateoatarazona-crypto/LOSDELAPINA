@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import FechasTable from '../fechas/FechasTable'
+import Link from 'next/link'
+import { EstadoEvento, Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,14 +29,17 @@ async function getHistorial(sp: Record<string, string | string[] | undefined>): 
   const hasta = hastaStr ? new Date(hastaStr) : undefined
 
   const today = new Date()
-  const where: any = {
-    fechaEvento: { lte: hasta ?? new Date(today.getFullYear(), today.getMonth(), today.getDate()) },
-    estado: {
-      in: ['Ejecutada','Cerrada','Cancelada'],
+  const fechaEventoFilter: Prisma.DateTimeFilter = {
+    lte: hasta ?? new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  }
+  if (desde) fechaEventoFilter.gte = desde
+
+  const where: Prisma.EventWhereInput = {
+    fechaEvento: fechaEventoFilter,
+    estado: estado ? (estado as EstadoEvento) : {
+      in: [EstadoEvento.Ejecutada, EstadoEvento.Cerrada, EstadoEvento.Cancelada],
     },
   }
-  if (desde) where.fechaEvento.gte = desde
-  if (estado) where.estado = estado as any
 
   const eventos = await prisma.event.findMany({
     where,
@@ -47,12 +52,12 @@ async function getHistorial(sp: Record<string, string | string[] | undefined>): 
 
   return eventos.map((e) => ({
     id: e.id,
-    fecha: format(e.fechaEvento, 'PP', { locale: es }),
+    fecha: format(e.fechaEvento, 'dd/MM/yyyy', { locale: es }),
     estado: e.estado,
-    artistas: e.artistas.map((a) => a.artista.nombre).join(', '),
-    empresario: e.empresario?.nombre ?? '',
-    ciudad: e.ciudad ?? null,
-    venue: e.venue ?? null,
+    artistas: e.artistas.map((a: { artista: { nombre: string } }) => a.artista.nombre).join(', '),
+    empresario: e.empresario.nombre,
+    ciudad: e.ciudad,
+    venue: e.venue,
     total: Number(e.totalNegociado),
     anticipo: Number(e.anticipo),
     segundoPago: Number(e.segundoPago),
@@ -77,12 +82,12 @@ export default async function HistorialPage({ searchParams }: { searchParams: Pr
         <p className="font-caption text-lg md:text-xl max-w-2xl mx-auto mb-6" style={{ color: 'var(--foreground-secondary)' }}>
           Revisa el historial completo de eventos realizados y analiza el rendimiento de tu negocio musical
         </p>
-        <a href="/fechas/nueva" className="btn-primary inline-flex items-center gap-2">
+        <Link href="/fechas/nueva" className="btn-primary inline-flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           Agregar Fecha Nueva
-        </a>
+        </Link>
       </div>
 
       {/* Estadísticas del Historial */}
